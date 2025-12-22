@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>沖繩紀行 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --shuri-red: #B22222;
+            --ocean-blue: #0077be;
+            --sand-beige: #FAF9F6;
+            --ink-black: #333333;
+            --muted-gray: #888888;
+            --light-gray: #f8f8f8;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--sand-beige);
+            color: var(--ink-black);
+            margin: 0;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .wave-bg {
+            background-color: var(--ocean-blue);
+            height: 80px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .hero-info h1 { margin: 0; font-size: 1.2rem; letter-spacing: 4px; }
+
+        .container { max-width: 500px; margin: auto; padding: 15px; }
+
+        /* 每日導航 */
+        .day-nav-container {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 249, 246, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .day-nav {
+            display: flex;
+            overflow-x: auto;
+            padding: 12px 10px;
+            gap: 10px;
+            scrollbar-width: none;
+        }
+        .day-nav::-webkit-scrollbar { display: none; }
+        .day-item {
+            flex: 0 0 auto;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .day-item.active {
+            background: var(--shuri-red);
+            color: white;
+            border-color: var(--shuri-red);
+        }
+
+        /* 天氣卡片 */
+        .weather-box {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #eee;
+        }
+        .weather-loc { font-size: 14px; font-weight: bold; color: var(--ink-black); margin-bottom: 4px; }
+        .weather-main { display: flex; align-items: center; gap: 8px; }
+        .rain-chance { color: var(--ocean-blue); font-size: 12px; font-weight: bold; margin-top: 4px; }
+
+        /* 行程佈局 */
+        .itinerary-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        /* 左側時間欄 */
+        .time-col {
+            flex: 0 0 75px;
+            text-align: right;
+            padding-top: 5px;
+        }
+        .time-start { font-size: 15px; font-weight: 700; color: var(--ink-black); display: block; }
+        .time-duration { font-size: 11px; color: var(--muted-gray); display: block; margin-top: 2px; }
+
+        /* 右側行程卡 */
+        .event-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #f0f0f0;
+        }
+        .category-tag {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        .tag-flight { background: #e3f2fd; color: #1976d2; }
+        .tag-food { background: #fff3e0; color: #f57c00; }
+        .tag-spot { background: #e8f5e9; color: #388e3c; }
+        .tag-hotel { background: #ffebee; color: #c62828; }
+        .tag-shop { background: #f3e5f5; color: #7b1fa2; }
+
+        .event-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .event-intro { font-size: 12px; color: #666; line-height: 1.4; }
+
+        /* 交通分隔線 */
+        .transport-divider {
+            margin-left: 87px;
+            padding: 0 0 15px 15px;
+            color: var(--muted-gray);
+            font-size: 11px;
+            border-left: 1px dashed #ccc;
+            margin-top: -10px;
+        }
+
+        .hidden { display: none; }
+
+        /* 清單專用樣式 */
+        .list-tabs {
+            display: flex;
+            background: white;
+            margin: -15px -15px 15px -15px;
+            border-bottom: 1px solid #eee;
+        }
+        .list-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            color: var(--muted-gray);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .list-tab.active {
+            color: var(--shuri-red);
+            font-weight: bold;
+            border-bottom: 2px solid var(--shuri-red);
+        }
+        .check-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #f0f0f0;
+        }
+        .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--shuri-red);
+        }
+        .check-text { font-size: 14px; }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0; width: 100%; background: white;
+            display: flex; padding: 10px 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 1000;
+        }
+        .nav-link { flex: 1; text-align: center; text-decoration: none; color: #aaa; font-size: 11px; cursor: pointer; }
+        .nav-link.active { color: var(--shuri-red); font-weight: bold; }
+        .nav-icon { font-size: 20px; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="wave-bg">
+    <div class="hero-info">
+        <h1>沖繩紀行 2026</h1>
+    </div>
+</div>
+
+<!-- 行程頁面內容 -->
+<div id="page-itinerary">
+    <div class="day-nav-container">
+        <div class="day-nav">
+            <div class="day-item active" onclick="switchDay(1)"><span>D1</span></div>
+            <div class="day-item" onclick="switchDay(2)"><span>D2</span></div>
+            <div class="day-item" onclick="switchDay(3)"><span>D3</span></div>
+            <div class="day-item" onclick="switchDay(4)"><span>D4</span></div>
+            <div class="day-item" onclick="switchDay(5)"><span>D5</span></div>
+            <div class="day-item" onclick="switchDay(6)"><span>D6</span></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 天氣卡片 -->
+        <div class="weather-box">
+            <div>
+                <div id="w-loc" class="weather-loc">那霸市 Naha</div>
+                <div class="weather-main">
+                    <span id="w-icon" style="font-size: 1.5rem;">☀️</span>
+                    <span id="w-temp" style="font-size: 1.1rem; font-weight: bold;">21°C / 17°C</span>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div class="rain-chance">☔ 降雨機率 <span id="w-rain">10%</span></div>
+            </div>
+        </div>
+
+        <div id="itinerary-list">
+            <!-- Day 1 -->
+            <div id="day-1" class="day-section">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">13:10</span><span class="time-duration">3.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-flight">交通</span>
+                        <div class="event-title">香港 ✈️ 沖繩那霸</div>
+                        <div class="event-intro">搭乘 UO820 航班，抵達後辦理入境。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 接駁巴士 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">17:30</span><span class="time-duration">30 分鐘</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">手續</span>
+                        <div class="event-title">領取租車 (Nippon)</div>
+                        <div class="event-intro">辦理取車手續，檢查車況與導航。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 45 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">18:45</span><span class="time-duration">Check-in</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">LeQu Okinawa Chatan</div>
+                        <div class="event-intro">入住北谷美國村飯店，稍作休息。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 5 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">19:30</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">景點</span>
+                        <div class="event-title">美國村 (American Village)</div>
+                        <div class="event-intro">感受異國風情，悠閒散步與逛街購物。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 5 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">21:00</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">晚餐</span>
+                        <div class="event-title">琉球之牛 (北谷店)</div>
+                        <div class="event-intro">品嚐超人氣和牛燒肉盛宴。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 5 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">22:45</span><span class="time-duration">休息</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">飯店</span>
+                        <div class="event-title">返回 LeQu Hotel</div>
+                        <div class="event-intro">回到飯店休息，享受大浴場溫泉。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div id="day-2" class="day-section hidden">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:00</span><span class="time-duration">出發</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">LeQu Okinawa Chatan</div>
+                        <div class="event-intro">早晨從飯店出發。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 50 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:50</span><span class="time-duration">45 分鐘</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">景點</span>
+                        <div class="event-title">萬座毛</div>
+                        <div class="event-intro">欣賞象鼻海蝕岩與遼闊東海。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 45 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">12:20</span><span class="time-duration">2 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">午餐</span>
+                        <div class="event-title">古宇利島 蝦蝦飯</div>
+                        <div class="event-intro">絕美海景配上蒜香辛味蝦飯。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 30 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">15:00</span><span class="time-duration">3.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">景點</span>
+                        <div class="event-title">美麗海水族館</div>
+                        <div class="event-intro">觀看黑潮之海巨大水槽與鯨鯊。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 1.5 小時</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">20:00</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">晚餐</span>
+                        <div class="event-title">Taco Rice / 壽司市場</div>
+                        <div class="event-intro">返回美國村附近享用道地晚餐。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 5 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">21:45</span><span class="time-duration">休息</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">飯店</span>
+                        <div class="event-title">返回 LeQu Hotel</div>
+                        <div class="event-intro">結束北谷行程，回飯店放鬆。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div id="day-3" class="day-section hidden">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:00</span><span class="time-duration">出發</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">LeQu Okinawa Chatan</div>
+                        <div class="event-intro">辦理退房，準備移往那霸市區。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 40 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">11:30</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">午餐</span>
+                        <div class="event-title">沖繩麵 nankuru796</div>
+                        <div class="event-intro">特色慢燉排骨與傳統琉球麵條。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">13:15</span><span class="time-duration">5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-shop">購物</span>
+                        <div class="event-title">Aeon Mall Rycom</div>
+                        <div class="event-intro">沖繩最強百貨，內有 Pokemon Store。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 40 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">18:45</span><span class="time-duration">Check-in</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">La'gent Hotel Naha</div>
+                        <div class="event-intro">入住那霸市區，方便遊覽國際通。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">20:00</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">晚餐</span>
+                        <div class="event-title">食彩酒房</div>
+                        <div class="event-intro">在那霸享受當地人推薦的居酒屋。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚶 步行 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">21:45</span><span class="time-duration">休息</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">飯店</span>
+                        <div class="event-title">返回 La'gent Hotel</div>
+                        <div class="event-intro">在那霸的第一晚，回飯店休息。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div id="day-4" class="day-section hidden">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:00</span><span class="time-duration">出發</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">La'gent Hotel Naha</div>
+                        <div class="event-intro">早晨從飯店出發。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:30</span><span class="time-duration">1 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">文化</span>
+                        <div class="event-title">首里城 / 西來院</div>
+                        <div class="event-intro">參觀王國遺跡，感受歷史氛圍。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">11:40</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">午餐</span>
+                        <div class="event-title">古民家食堂 (炸豬排)</div>
+                        <div class="event-intro">老建築內的究極酥脆炸豬排。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 30 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">13:30</span><span class="time-duration">2.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">景點</span>
+                        <div class="event-title">沖繩世界 玉泉洞</div>
+                        <div class="event-intro">探索地下神秘的鐘乳石奇觀。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 35 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">17:30</span><span class="time-duration">1.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">晚餐</span>
+                        <div class="event-title">暖暮拉麵</div>
+                        <div class="event-intro">排隊名店，細麵與豚骨湯的完美結合。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">19:30</span><span class="time-duration">休息</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">飯店</span>
+                        <div class="event-title">返回 La'gent Hotel</div>
+                        <div class="event-intro">提早回飯店休息，整理戰利品。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div id="day-5" class="day-section hidden">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:00</span><span class="time-duration">出發</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">La'gent Hotel Naha</div>
+                        <div class="event-intro">早晨從飯店出發。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:15</span><span class="time-duration">45 分鐘</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">文化</span>
+                        <div class="event-title">波上宮</div>
+                        <div class="event-intro">佇立於珊瑚礁岩上的絕美神社。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 10 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">11:10</span><span class="time-duration">2 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">午餐</span>
+                        <div class="event-title">牧志公設市場</div>
+                        <div class="event-intro">體驗那霸市民的廚房，品嚐海產。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 25 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">13:40</span><span class="time-duration">4 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-shop">購物</span>
+                        <div class="event-title">Ashibinaa Outlet</div>
+                        <div class="event-intro">國際名牌林立，離境前最後血拼。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 20 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">19:00</span><span class="time-duration">2 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-food">晚餐</span>
+                        <div class="event-title">燒肉ここから</div>
+                        <div class="event-intro">厚切牛舌極具嚼勁，分量十足。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">21:30</span><span class="time-duration">休息</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">飯店</span>
+                        <div class="event-title">返回 La'gent Hotel</div>
+                        <div class="event-intro">最後一晚，回飯店整理行李。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 6 -->
+            <div id="day-6" class="day-section hidden">
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">10:00</span><span class="time-duration">出發</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-hotel">酒店</span>
+                        <div class="event-title">La'gent Hotel Naha</div>
+                        <div class="event-intro">辦理退房，準備返程。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 25 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">11:00</span><span class="time-duration">3.5 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">景點</span>
+                        <div class="event-title">瀨長島 幸福鬆餅</div>
+                        <div class="event-intro">在海風中品嚐鬆餅，觀看飛機起降。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 駕車 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">15:10</span><span class="time-duration">20 分鐘</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-spot">手續</span>
+                        <div class="event-title">還車手續</div>
+                        <div class="event-intro">加滿油後歸還車輛，轉乘接駁。</div>
+                    </div>
+                </div>
+                <div class="transport-divider">🚗 接駁巴士 15 分鐘</div>
+                <div class="itinerary-row">
+                    <div class="time-col"><span class="time-start">17:40</span><span class="time-duration">2 小時</span></div>
+                    <div class="event-card">
+                        <span class="category-tag tag-flight">交通</span>
+                        <div class="event-title">那霸 ✈️ 香港 (UO821)</div>
+                        <div class="event-intro">整理行李，帶著回憶搭機返港。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 清單頁面內容 -->
+<div id="page-list" class="hidden">
+    <div class="list-tabs">
+        <div id="tab-pre" class="list-tab active" onclick="switchListTab('pre')">出發前清單</div>
+        <div id="tab-shop" class="list-tab" onclick="switchListTab('shop')">購物清單</div>
+    </div>
+    <div class="container">
+        <!-- 出發前清單內容 -->
+        <div id="subpage-pre">
+            <div class="check-item"><input type="checkbox"> <span class="check-text">護照 (有效期6個月以上)</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">日圓現金 & 信用卡</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">國際駕駛執照 (IDP)</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">Visit Japan Web QR Code</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">保險證明文件</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">預訂確認信 (飯店/租車)</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">行動電源 & 萬用轉接頭</span></div>
+        </div>
+        <!-- 購物清單內容 -->
+        <div id="subpage-shop" class="hidden">
+            <div class="check-item"><input type="checkbox"> <span class="check-text">合利他命 EX Plus</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">Dyson 吹風機 (Outlet價)</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">紅芋塔 (御菓子御殿)</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">石垣鹽巧克力</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">Pokemon 中心限定商品</span></div>
+            <div class="check-item"><input type="checkbox"> <span class="check-text">沖繩限定泡麵 (Orion風味)</span></div>
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <a id="nav-itinerary" class="nav-link active" onclick="showPage('itinerary')"><span class="nav-icon">⛩️</span>行程</a>
+    <a id="nav-list" class="nav-link" onclick="showPage('list')"><span class="nav-icon">📜</span>清單</a>
+</nav>
+
+<script>
+    const weatherData = {
+        1: { loc: "那霸市 Naha", icon: "☀️", temp: "21°C / 17°C", rain: "10%" },
+        2: { loc: "名護市 Nago", icon: "☀️", temp: "20°C / 16°C", rain: "0%" },
+        3: { loc: "北谷町 Chatan", icon: "☁️", temp: "19°C / 15°C", rain: "30%" },
+        4: { loc: "南城市 Nanjo", icon: "🌦️", temp: "21°C / 18°C", rain: "50%" },
+        5: { loc: "那霸市 Naha", icon: "☀️", temp: "22°C / 17°C", rain: "10%" },
+        6: { loc: "豐見城市 Tomigusuku", icon: "☁️", temp: "20°C / 16°C", rain: "20%" }
+    };
+
+    function switchDay(day) {
+        document.querySelectorAll('.day-item').forEach((item, idx) => {
+            item.classList.toggle('active', (idx + 1) === day);
+        });
+        document.querySelectorAll('.day-section').forEach(sec => sec.classList.add('hidden'));
+        document.getElementById(`day-${day}`).classList.remove('hidden');
+
+        // 更新天氣與地區
+        const w = weatherData[day];
+        document.getElementById('w-loc').innerText = w.loc;
+        document.getElementById('w-icon').innerText = w.icon;
+        document.getElementById('w-temp').innerText = w.temp;
+        document.getElementById('w-rain').innerText = w.rain;
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 頁面切換邏輯
+    function showPage(pageId) {
+        // 更新導航欄狀態
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        document.getElementById(`nav-${pageId}`).classList.add('active');
+
+        // 切換內容區塊
+        document.getElementById('page-itinerary').classList.add('hidden');
+        document.getElementById('page-list').classList.add('hidden');
+        document.getElementById(`page-${pageId}`).classList.remove('hidden');
+
+        window.scrollTo({ top: 0 });
+    }
+
+    // 清單子分頁切換邏輯
+    function switchListTab(tabType) {
+        // 更新 Tab 標籤
+        document.querySelectorAll('.list-tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`tab-${tabType}`).classList.add('active');
+
+        // 切換子分頁內容
+        document.getElementById('subpage-pre').classList.add('hidden');
+        document.getElementById('subpage-shop').classList.add('hidden');
+        document.getElementById(`subpage-${tabType}`).classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
