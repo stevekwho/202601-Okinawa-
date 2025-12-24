@@ -299,7 +299,7 @@
         .evt-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; line-height: 1.4; color: var(--text-main); }
         .evt-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
         
-        .map-btn {
+        .map-btn, .pdf-btn {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -310,6 +310,7 @@
             padding: 6px 12px;
             border-radius: 20px;
             font-weight: 500;
+            margin-right: 10px;
         }
 
         .bottom-nav {
@@ -408,7 +409,7 @@
                 { transport: "15mins 接送", icon: "🚐" },
                 { time: "17:30", dur: "30min", type: "transport", title: "取車", desc: "OkiBlues 中文租車公司", loc: "Oki Blues 中文租車公司" },
                 { transport: "1hr 駕車至北谷", icon: "🚗" },
-                { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort" },
+                { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort", pdf: "lequ_booking_confirmation.pdf" },
                 { transport: "5min 步行", icon: "🚶" },
                 { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村漫步", loc: "美國村" },
                 { time: "21:00", dur: "1.5hr", type: "food", title: "晚餐: 琉球之牛", desc: "北谷店 (已預約)", loc: "琉球之牛 北谷店" },
@@ -442,7 +443,7 @@
                 { transport: "20min 駕車", icon: "🚗" },
                 { time: "13:15", dur: "5.5hr", type: "shop", title: "Aeon Mall Rycom", desc: "沖繩最大購物中心 & Pokemon Store", loc: "Aeon Mall Okinawa Rycom" },
                 { transport: "45min 駕車", icon: "🚗" },
-                { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha" },
+                { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha", pdf: "lagent_booking_confirmation.pdf" },
 		{ transport: "10min 步行", icon: "🚶" },
 		{ time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房" },
 		{ time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
@@ -565,6 +566,7 @@
                     </div>`;
             } else {
                 const mapLink = evt.loc ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
+                const pdfLink = evt.pdf ? `<a href="${evt.pdf}" target="_blank" class="pdf-btn">📄 View Booking PDF</a>` : '';
                 html += `
                     <div class="event-group">
                         <div class="time-col">
@@ -575,7 +577,7 @@
                             <span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
                             <div class="evt-title">${evt.title}</div>
                             <div class="evt-desc">${evt.desc}</div>
-                            ${mapLink}
+                            ${pdfLink}${mapLink}
                         </div>
                     </div>`;
             }
