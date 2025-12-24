@@ -497,6 +497,15 @@
         }
     };
 
+    const dayLocations = {
+        1: { lat: 26.3200, lon: 127.7600, name: "北谷町 Chatan" },  // Day 1: 北谷
+        2: { lat: 26.5914, lon: 127.9771, name: "名護市 Nago" },    // Day 2: 北部
+        3: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 3: 那霸
+        4: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 4: 那霸
+        5: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 5: 那霸
+        6: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" }     // Day 6: 近那霸
+    };
+
     const todoData = {
         pre: ["護照 (有效期6個月)", "國際駕照 (IDP)", "日圓現金", "Visit Japan Web 登錄", "保險證明", "行動電源", "漫遊卡/WiFi"],
         shop: ["合利他命 EX Plus", "Dyson 吹風機", "紅芋塔", "石垣鹽巧克力", "Pokemon 限定", "邊銀食堂辣油"],
@@ -507,12 +516,14 @@
         flight: "var(--tag-flight)", food: "var(--tag-food)", spot: "var(--tag-spot)", hotel: "var(--tag-hotel)", shop: "var(--tag-shop)", transport: "var(--tag-transport)", drive: "var(--tag-transport)"
     };
 
+    let forecastData = null; // To store the 14-day forecast
+
     function init() {
         renderDayNav();
         renderItinerary(1);
         renderList('pre');
         updateCountdown();
-        fetchWeather();
+        fetchForecast(); // Fetch 14-day forecast once on init
     }
 
     function renderDayNav() {
@@ -585,6 +596,7 @@
         });
         container.innerHTML = html;
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        updateWeatherCard(day); // Update weather card with forecast for the day
     }
 
     function getTagLabel(title, type) {
@@ -595,7 +607,9 @@
         return map[type] || "其他";
     }
 
-    function switchDay(day) { renderItinerary(day); }
+    function switchDay(day) { 
+        renderItinerary(day); 
+    }
 
     function renderList(tab) {
         document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop','food'][idx] === tab));
@@ -632,18 +646,42 @@
         document.getElementById('countdown-num').innerText = Math.max(0, Math.ceil(diff / 86400000));
     }
 
-    async function fetchWeather() {
+    async function fetchForecast() {
         try {
-            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&current=temperature_2m,weather_code,precipitation_probability&timezone=Asia%2FTokyo`);
+            // Fetch 14-day forecast for a central location (Naha as default)
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14');
             const data = await res.json();
-            if (data.current) {
-                document.getElementById('w-loc').innerText = "那霸市 Naha";
-                document.getElementById('w-temp').innerText = Math.round(data.current.temperature_2m) + "°";
-                document.getElementById('w-rain').innerText = (data.current.precipitation_probability || 0) + "%";
-                const code = data.current.weather_code;
-                document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "降雨";
-            }
-        } catch (e) { document.getElementById('w-loc').innerText = "天氣暫時無法顯示"; }
+            forecastData = data.daily;
+            updateWeatherCard(1); // Update for initial day
+        } catch (e) {
+            document.getElementById('w-loc').innerText = "天氣暫時無法顯示";
+        }
+    }
+
+    function updateWeatherCard(day) {
+        if (!forecastData) return;
+
+        // Calculate the forecast index for the trip day (assuming trip starts on Jan 1, 2026)
+        const today = new Date();
+        const tripStart = new Date('2026-01-01');
+        const daysUntilTrip = Math.ceil((tripStart - today) / (1000 * 60 * 60 * 24));
+        const forecastIndex = daysUntilTrip + day - 1; // Day 1 is index daysUntilTrip, etc.
+
+        if (forecastIndex < 0 || forecastIndex >= forecastData.time.length) {
+            document.getElementById('w-loc').innerText = "預測不可用";
+            return;
+        }
+
+        const location = dayLocations[day] || { name: "那霸市 Naha" };
+        const maxTemp = Math.round(forecastData.temperature_2m_max[forecastIndex]);
+        const minTemp = Math.round(forecastData.temperature_2m_min[forecastIndex]);
+        const code = forecastData.weather_code[forecastIndex];
+        const precip = forecastData.precipitation_probability_mean[forecastIndex] || 0;
+
+        document.getElementById('w-loc').innerText = location.name + " (預測)";
+        document.getElementById('w-temp').innerText = maxTemp + "° / " + minTemp + "°";
+        document.getElementById('w-rain').innerText = precip + "%";
+        document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "降雨";
     }
 
     init();
