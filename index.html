@@ -367,9 +367,12 @@
                 <h3 id="w-loc">讀取天氣中...</h3>
                 <p id="w-desc">--</p>
             </div>
-            <div style="text-align: right;">
-                <div id="w-temp" style="font-size: 24px; font-weight: bold; color: var(--primary);">--°</div>
-                <div style="font-size: 12px; color: var(--accent);">☔ <span id="w-rain">--%</span></div>
+            <div style="text-align: right; display: flex; align-items: center; gap: 10px;">
+                <div id="w-icon" style="font-size: 30px;">⛅</div>
+                <div>
+                    <div id="w-temp" style="font-size: 24px; font-weight: bold; color: var(--primary);">--°</div>
+                    <div style="font-size: 12px; color: var(--accent);">☔ <span id="w-rain">--%</span></div>
+                </div>
             </div>
         </div>
 
@@ -461,7 +464,7 @@
                 { transport: "30min 駕車", icon: "🚗" },
                 { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館，體驗傳統文化和太鼓表演。", loc: "沖繩世界" },
                 { transport: "45min 駕車", icon: "🚗" },
-                { time: "16:45", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
+                { time: "16:45", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
 		{ transport: "10min 步行", icon: "🚶" },
 		{ time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演，適合晚餐和逛街（屋台或牛排）。", loc: "國際通" },
 		{ transport: "10min 步行", icon: "🚶" },
@@ -477,7 +480,7 @@
                 { transport: "10min 駕車", icon: "🚗" },
                 { time: "13:10", dur: "5hr", type: "shop", title: "Ashibinaa Outlet", desc: "品牌折扣購物中心", loc: "Ashibinaa Outlet" },
                 { transport: "40min 駕車", icon: "🚗" },
-		{ time: "18:55", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
+		{ time: "18:55", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
 		{ transport: "5min 步行", icon: "🚶" },
                 { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那霸久茂地店 厚切牛舌", loc: "燒肉ここから 那霸久茂地店" },
 		{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
@@ -517,6 +520,10 @@
     };
 
     let forecastData = null; // To store the 14-day forecast
+
+    const weatherIcons = {
+        0: '☀️', 1: '☀️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌧️', 53: '🌧️', 55: '🌧️', 56: '🌧️', 57: '🌧️', 61: '🌦️', 63: '🌧️', 65: '🌧️', 66: '🌧️', 67: '🌧️', 71: '❄️', 73: '❄️', 75: '❄️', 77: '❄️', 80: '🌧️', 81: '🌧️', 82: '🌧️', 85: '❄️', 86: '❄️', 95: '⛈️', 96: '⛈️', 99: '⛈️'
+    };
 
     function init() {
         renderDayNav();
@@ -682,10 +689,10 @@
         document.getElementById('w-temp').innerText = maxTemp + "° / " + minTemp + "°";
         document.getElementById('w-rain').innerText = precip + "%";
         document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "降雨";
+        document.getElementById('w-icon').innerText = weatherIcons[code] || '⛅';
     }
 
     init();
 </script>
 </body>
 </html>
-
