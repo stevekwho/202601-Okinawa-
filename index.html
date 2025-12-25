@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 v3.0</title>
+    <title>2026 沖繩之旅 V3.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* 日系配色 */
+            /* 日系簡約配色 (保留 V2) */
             --bg-color: #F9F9F7;
             --card-bg: #FFFFFF;
             --primary: #5B8996;
@@ -35,145 +35,104 @@
             overflow-x: hidden;
         }
 
-        /* Hero Section */
+        /* 頂部 Hero Section (保留 V2) */
         .hero-header {
-            position: relative;
-            height: 250px;
-            background-color: #5B8996;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 25px;
-            color: white;
+            position: relative; height: 250px; background-color: #5B8996;
+            overflow: hidden; display: flex; flex-direction: column;
+            justify-content: flex-end; padding: 25px; color: white;
         }
         .hero-header::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background-image: url('https://images.unsplash.com/photo-1647336963732-7446b9da7a6f?q=80&w=2340');
-            background-size: cover;
-            background-position: center 60%;
-            z-index: 1;
+            background-size: cover; background-position: center 60%; z-index: 1;
         }
         .hero-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
-            z-index: 2;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%); z-index: 2;
         }
         .hero-content { position: relative; z-index: 3; }
         .hero-title { font-size: 26px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); letter-spacing: 2px; }
         .hero-subtitle { font-size: 14px; opacity: 0.9; margin-top: 5px; font-weight: 300; }
         
         .countdown-box {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 10px 15px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 10;
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            padding: 10px 15px; border-radius: 12px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.2); z-index: 10;
         }
         .countdown-num { font-size: 20px; font-weight: bold; line-height: 1; }
         .countdown-label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 0 15px; }
 
-        /* Day Nav */
+        /* 每日導航 (保留 V2) */
         .day-nav-container {
-            position: sticky; top: 0;
-            background: rgba(249, 249, 247, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 50;
-            padding: 12px 0;
+            position: sticky; top: 0; background: rgba(249, 249, 247, 0.95);
+            backdrop-filter: blur(10px); z-index: 50; padding: 12px 0;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         .day-nav { display: flex; overflow-x: auto; padding: 0 15px; gap: 12px; scrollbar-width: none; }
         .day-nav::-webkit-scrollbar { display: none; }
         .day-btn {
             flex: 0 0 auto; min-width: 60px; height: 65px;
-            border-radius: 16px; background: white;
-            border: 1px solid var(--border);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s;
-            color: var(--text-sub);
+            border-radius: 16px; background: white; border: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; color: var(--text-sub);
         }
         .day-btn.active {
-            background: var(--primary); color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(91, 137, 150, 0.3);
-            transform: translateY(-2px);
+            background: var(--primary); color: white; border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(91, 137, 150, 0.3); transform: translateY(-2px);
         }
         .day-btn span:first-child { font-size: 13px; font-weight: bold; }
         .day-btn span:last-child { font-size: 10px; opacity: 0.8; }
 
-        /* Weather */
+        /* 天氣卡片 (保留 V2 樣式) */
         .weather-card {
-            background: var(--card-bg); border-radius: 16px;
-            padding: 18px 20px; margin: 20px 0;
-            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card-bg); border-radius: 16px; padding: 18px 20px;
+            margin: 20px 0; display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border);
         }
 
-        /* Timeline */
+        /* 行程時間軸 */
         .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
         .timeline::before {
-            content: ''; position: absolute;
-            top: 15px; bottom: 30px; left: 26px;
+            content: ''; position: absolute; top: 15px; bottom: 30px; left: 26px;
             width: 2px; background: #E8E8E8; z-index: 0;
         }
 
         .event-group { position: relative; margin-bottom: 25px; z-index: 5; display: flex; gap: 15px; }
-        .event-group::before {
-            content: ''; position: absolute;
-            left: 23px; top: 17px;
-            width: 8px; height: 8px;
-            border-radius: 50%; background: white;
-            border: 2px solid var(--primary); z-index: 2;
-        }
-
         .time-col {
-            flex: 0 0 58px; text-align: right;
-            padding-top: 10px; position: relative;
-            z-index: 10; background: var(--bg-color);
+            flex: 0 0 58px; text-align: right; padding-top: 10px;
+            position: relative; z-index: 10; background: var(--bg-color);
         }
         .time-start { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'Roboto', sans-serif; }
         .time-dur { font-size: 10px; color: var(--text-sub); display: block; margin-top: 2px; }
 
         .event-card {
-            flex: 1; background: var(--card-bg);
-            border-radius: 16px; padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            border: 1px solid var(--border);
-            position: relative;
+            flex: 1; background: var(--card-bg); border-radius: 16px; padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border); position: relative;
             transition: transform 0.2s;
         }
 
-        /* 可點擊的卡片樣式 */
-        .event-card.clickable { cursor: pointer; border-bottom: 3px solid var(--accent); }
+        /* V3 新增：可點擊的選項卡片樣式 */
+        .event-card.clickable { cursor: pointer; border-left: 4px solid var(--accent); }
         .event-card.clickable:active { transform: scale(0.98); background: #fafafa; }
-        
         .click-hint {
-            font-size: 11px; color: var(--accent);
-            background: rgba(224, 122, 95, 0.1);
-            padding: 4px 8px; border-radius: 4px;
-            display: inline-block; margin-top: 8px; font-weight: 500;
+            font-size: 11px; color: var(--accent); background: rgba(224, 122, 95, 0.1);
+            padding: 4px 8px; border-radius: 4px; display: inline-block;
+            margin-top: 8px; font-weight: 500;
         }
 
-        /* Ticket Card */
+        /* 機票樣式行程卡 (V2 原版樣式) */
         .ticket-card {
             flex: 1; background: var(--tag-flight); color: white;
             border-radius: 16px; padding: 0; overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
         }
         .ticket-header {
-            background: rgba(255,255,255,0.1); padding: 8px 15px;
-            font-size: 11px; display: flex; justify-content: space-between;
-            letter-spacing: 1px; border-bottom: 1px dashed rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1); padding: 8px 15px; font-size: 11px;
+            display: flex; justify-content: space-between; letter-spacing: 1px;
+            border-bottom: 1px dashed rgba(255,255,255,0.2);
         }
         .ticket-body { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .ticket-point { text-align: center; }
@@ -181,19 +140,26 @@
         .ticket-city { font-size: 12px; opacity: 0.8; margin-top: 2px; }
         .ticket-arrow { flex: 1; text-align: center; position: relative; padding: 0 10px; }
         .ticket-arrow::after { content: '✈'; font-size: 16px; }
-        .ticket-footer { padding: 10px 15px; background: white; color: var(--text-main); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .ticket-footer {
+            padding: 10px 15px; background: white; color: var(--text-main);
+            font-size: 12px; display: flex; align-items: center; gap: 8px;
+        }
 
-        /* Transport */
+        /* 交通間隔時間 (V2 原版) */
         .transport-spacer { margin: -15px 0 15px 73px; position: relative; padding-left: 15px; }
         .transport-line {
             position: absolute; left: -47px; top: 0; bottom: 0; width: 2px;
             background: repeating-linear-gradient(to bottom, #E8E8E8, #E8E8E8 4px, transparent 4px, transparent 8px);
         }
         .transport-tag {
-            background: #F0F0F0; color: var(--text-sub);
-            font-size: 11px; padding: 4px 12px; border-radius: 20px;
-            display: inline-flex; align-items: center; gap: 5px;
-            border: 1px solid var(--border);
+            background: #F0F0F0; color: var(--text-sub); font-size: 11px;
+            padding: 4px 12px; border-radius: 20px; display: inline-flex;
+            align-items: center; gap: 5px; border: 1px solid var(--border);
+        }
+
+        .event-group::before {
+            content: ''; position: absolute; left: 23px; top: 17px; width: 8px; height: 8px;
+            border-radius: 50%; background: white; border: 2px solid var(--primary); z-index: 2;
         }
 
         .tag { font-size: 10px; padding: 2px 8px; border-radius: 6px; display: inline-block; margin-bottom: 8px; font-weight: 600; }
@@ -201,65 +167,39 @@
         .evt-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
         
         .map-btn {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 12px; color: var(--primary); text-decoration: none;
-            background: rgba(91, 137, 150, 0.1); padding: 6px 12px;
-            border-radius: 20px; font-weight: 500; margin-top: 5px;
+            display: inline-flex; align-items: center; gap: 4px; font-size: 12px;
+            color: var(--primary); text-decoration: none; background: rgba(91, 137, 150, 0.1);
+            padding: 6px 12px; border-radius: 20px; font-weight: 500;
         }
 
-        /* 彈出視窗 (Modal) */
+        /* V3 新增：彈出視窗 (Modal) */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
-            backdrop-filter: blur(5px);
-            align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.3s;
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
         }
         .modal.show { display: flex; opacity: 1; }
-        
         .modal-content {
-            background-color: #fff;
-            margin: 15px;
-            padding: 0;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease-out;
+            background-color: #fff; margin: 15px; padding: 0; border-radius: 20px;
+            width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto;
+            position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out;
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
         .modal-header {
-            padding: 20px; border-bottom: 1px solid #eee;
-            position: sticky; top: 0; background: white; z-index: 10;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; border-bottom: 1px solid #eee; position: sticky; top: 0;
+            background: white; z-index: 10; display: flex; justify-content: space-between; align-items: center;
         }
         .modal-title { font-size: 18px; font-weight: bold; color: var(--primary); }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
-        
         .modal-body { padding: 20px; }
-        
-        .option-item {
-            border: 1px solid #eee; border-radius: 12px;
-            padding: 15px; margin-bottom: 15px;
-            background: #fafafa;
-        }
+        .option-item { border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: #fafafa; }
         .opt-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
-        .opt-tag { font-size: 11px; background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-weight: normal; }
         .opt-desc { font-size: 13px; color: #666; margin-bottom: 8px; line-height: 1.4; }
-        .opt-rec { font-size: 12px; color: var(--primary); background: rgba(91,137,150,0.1); padding: 5px 10px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
+        .opt-rec { font-size: 12px; color: var(--primary); background: rgba(91,137,150,0.1); padding: 5px 10px; border-radius: 6px; display: inline-block; }
 
-        /* Bottom Nav */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0,0,0,0.05);
+            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.05);
             display: flex; padding: 10px 0 25px 0; z-index: 1000;
         }
         .nav-item { flex: 1; text-align: center; cursor: pointer; color: #C0C0C0; }
@@ -267,9 +207,6 @@
         .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
         .nav-label { font-size: 10px; font-weight: 500; }
 
-        .hidden { display: none; }
-        
-        /* List Page */
         .list-header { display: flex; background: #F0F0F0; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
         .list-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; border-radius: 8px; color: var(--text-sub); cursor: pointer; }
         .list-tab.active { background: white; color: var(--text-main); font-weight: bold; }
@@ -278,7 +215,7 @@
         .todo-item.checked .todo-text { text-decoration: line-through; }
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); }
         .todo-text { font-size: 14px; flex: 1; }
-
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -330,7 +267,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <div class="modal-title" id="modal-title">餐廳選項</div>
-            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <span class="close-btn" onclick="closeModal()">×</span>
         </div>
         <div class="modal-body" id="modal-body">
             </div>
@@ -349,7 +286,7 @@
 </nav>
 
 <script>
-    // 資料結構優化：加入 options 數組
+    // 整合 V2 數據 與 V3 Options
     const itineraryData = {
         1: {
             date: "1/1 (週四)",
@@ -378,16 +315,16 @@
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "黑潮之海 4點後星光票價", loc: "美麗海水族館" },
                 { transport: "1hr15min 駕車", icon: "🚗" },
-                // Day 2 晚餐加入選項
+                // V3 Feature: 晚餐選項
                 { 
                     time: "20:00", dur: "1.5hr", type: "food", 
                     title: "晚餐: 北谷町選項", 
-                    desc: "塔可飯 或 迴轉壽司 (點擊查看詳情)", 
+                    desc: "塔可飯 或 迴轉壽司 (點擊選餐廳)", 
                     loc: "美國村",
                     hasOptions: true,
                     options: [
-                        { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁，份量十足。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
-                        { name: "グルメ迴轉壽司市場", desc: "美國村人氣排隊名店，食材新鮮，CP值高。", rec: "推介：鮭魚、鮪魚腹肉", loc: "グルメ回転寿司市場 美浜店" }
+                        { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
+                        { name: "グルメ迴轉壽司市場", desc: "人氣排隊名店，食材新鮮，CP值高。", rec: "推介：鮭魚、鮪魚腹肉", loc: "グルメ回転寿司市場 美浜店" }
                     ]
                 },
                 { time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
@@ -422,16 +359,16 @@
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "16:45", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
                 { transport: "10min 步行", icon: "🚶" },
-                // Day 4 晚餐加入選項
+                // V3 Feature: 晚餐選項
                 { 
                     time: "17:00", dur: "3.5hr", type: "spot", 
                     title: "國際通晚餐 & 逛街", 
-                    desc: "屋台村 或 88牛排 (點擊查看)", 
+                    desc: "屋台村 或 88牛排 (點擊選餐廳)", 
                     loc: "國際通",
                     hasOptions: true,
                     options: [
-                        { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧，適合想吃多樣化料理的人。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
-                        { name: "Steak House 88", desc: "美式風格老牌牛排館，深受當地人喜愛。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
+                        { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
+                        { name: "Steak House 88", desc: "美式風格老牌牛排館。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
                     ]
                 },
                 { transport: "10min 步行", icon: "🚶" },
@@ -443,16 +380,16 @@
             events: [
                 { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社、參拜", loc: "波上宮" },
                 { transport: "30min 駕車", icon: "🚗" },
-                // Day 5 午餐加入選項 (假設)
+                // V3 Feature: 午餐選項
                 { 
                     time: "11:30", dur: "1.5hr", type: "food", 
                     title: "午餐: 系滿美食", 
-                    desc: "暖暮拉麵 或 系滿漁市場 (點擊查看)", 
+                    desc: "暖暮拉麵 或 系滿漁市場 (點擊選餐廳)", 
                     loc: "系滿市",
                     hasOptions: true,
                     options: [
-                        { name: "暖暮拉麵 系滿店", desc: "九州冠軍拉麵，系滿店通常比國際通店排隊人少。", rec: "推介：半熟蛋拉麵、一口餃子", loc: "暖暮拉麵 系滿店" },
-                        { name: "系滿漁市場", desc: "新鮮便宜的海鮮市場，適合想吃生魚片、焗烤龍蝦的人。", rec: "推介：海膽醬焗烤龍蝦", loc: "系滿漁市場" }
+                        { name: "暖暮拉麵 系滿店", desc: "九州冠軍拉麵，系滿店排隊人少。", rec: "推介：半熟蛋拉麵", loc: "暖暮拉麵 系滿店" },
+                        { name: "系滿漁市場", desc: "新鮮便宜海鮮，適合吃生魚片。", rec: "推介：海膽醬焗烤龍蝦", loc: "系滿漁市場" }
                     ]
                 },
                 { transport: "10min 駕車", icon: "🚗" },
@@ -488,7 +425,6 @@
         flight: "var(--tag-flight)", food: "var(--tag-food)", spot: "var(--tag-spot)", hotel: "var(--tag-hotel)", shop: "var(--tag-shop)", transport: "var(--tag-transport)", drive: "var(--tag-transport)"
     };
 
-    // 當前顯示的天數
     let currentDay = 1;
 
     function init() {
@@ -508,6 +444,7 @@
         wrapper.innerHTML = html;
     }
 
+    // 核心渲染邏輯：完全保留 V2 的 Flight/Transport 邏輯，僅在一般 Event 加入 Options 功能
     function renderItinerary(day) {
         currentDay = day;
         document.querySelectorAll('.day-btn').forEach((btn, idx) => btn.classList.toggle('active', (idx + 1) == day));
@@ -516,12 +453,14 @@
         
         itineraryData[day].events.forEach((evt, index) => {
             if (evt.transport) {
+                // V2 邏輯：交通分隔線
                 html += `
                     <div class="transport-spacer">
                         <div class="transport-line"></div>
                         <div class="transport-tag">${evt.icon} ${evt.transport}</div>
                     </div>`;
             } else if (evt.type === 'flight') {
+                // V2 邏輯：Boarding Pass 機票樣式
                 html += `
                     <div class="event-group">
                         <div class="time-col">
@@ -550,11 +489,11 @@
                         </div>
                     </div>`;
             } else {
-                // 一般行程卡
-                // 檢查是否有 options
+                // 一般卡片，加入 V3 Options 判斷
                 const hasOptions = evt.hasOptions;
                 const clickAttr = hasOptions ? `onclick="openModal(${index})"` : '';
                 const clickClass = hasOptions ? 'clickable' : '';
+                // 修正 V2 的 Google Map 鏈接 Bug (0{...}) 改為 ${...}
                 const mapLink = (!hasOptions && evt.loc) ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
                 const optionHint = hasOptions ? `<div class="click-hint">👇 點擊選擇餐廳</div>` : '';
 
@@ -578,11 +517,9 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Modal 功能
     function openModal(eventIndex) {
         const evt = itineraryData[currentDay].events[eventIndex];
         if (!evt.hasOptions) return;
-
         document.getElementById('modal-title').innerText = evt.title;
         const body = document.getElementById('modal-body');
         
@@ -596,8 +533,7 @@
                     </div>
                     <div class="opt-desc">${opt.desc}</div>
                     ${opt.rec ? `<div class="opt-rec">💡 ${opt.rec}</div>` : ''}
-                </div>
-            `;
+                </div>`;
         });
         body.innerHTML = html;
         
@@ -611,13 +547,9 @@
         modal.classList.remove('show');
         setTimeout(() => modal.style.display = "none", 300);
     }
-    
-    // 點擊 Modal 外部關閉
     window.onclick = function(event) {
         const modal = document.getElementById('option-modal');
-        if (event.target == modal) {
-            closeModal();
-        }
+        if (event.target == modal) closeModal();
     }
 
     function getTagLabel(title, type) {
@@ -665,6 +597,7 @@
         document.getElementById('countdown-num').innerText = Math.max(0, Math.ceil(diff / 86400000));
     }
 
+    // 保留 V2 天氣 API 功能
     async function fetchWeather() {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&current=temperature_2m,weather_code,precipitation_probability&timezone=Asia%2FTokyo`);
