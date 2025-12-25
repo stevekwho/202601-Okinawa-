@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅</title>
-    <!-- 引入 Noto Sans TC 與 Roboto 字體 -->
+    <title>2026 沖繩之旅 v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* 日系簡約配色 */
-            --bg-color: #F9F9F7;       /* 胡粉色 */
-            --card-bg: #FFFFFF;        /* 純白 */
-            --primary: #5B8996;        /* 淺縹 */
-            --accent: #E07A5F;         /* 珊瑚色 */
-            --text-main: #4A4A4A;      /* 深灰 */
-            --text-sub: #888888;       /* 淺灰 */
-            --border: #EAEAEA;         /* 邊框 */
+            /* 日系配色 */
+            --bg-color: #F9F9F7;
+            --card-bg: #FFFFFF;
+            --primary: #5B8996;
+            --accent: #E07A5F;
+            --text-main: #4A4A4A;
+            --text-sub: #888888;
+            --border: #EAEAEA;
             
             --tag-transport: #E3F2FD; --text-transport: #1976D2;
             --tag-food: #FFF3E0;     --text-food: #F57C00;
@@ -36,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* 頂部 Hero Section 強化背景顯示 */
+        /* Hero Section */
         .hero-header {
             position: relative;
             height: 250px;
@@ -63,28 +62,13 @@
             background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
             z-index: 2;
         }
-        .hero-content {
-            position: relative;
-            z-index: 3;
-        }
-        .hero-title {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
-        }
-        .hero-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 5px;
-            font-weight: 300;
-        }
+        .hero-content { position: relative; z-index: 3; }
+        .hero-title { font-size: 26px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); letter-spacing: 2px; }
+        .hero-subtitle { font-size: 14px; opacity: 0.9; margin-top: 5px; font-weight: 300; }
         
         .countdown-box {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 20px; right: 20px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             padding: 10px 15px;
@@ -96,48 +80,30 @@
         .countdown-num { font-size: 20px; font-weight: bold; line-height: 1; }
         .countdown-label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+        .container { max-width: 600px; margin: 0 auto; padding: 0 15px; }
 
-        /* 每日導航 */
+        /* Day Nav */
         .day-nav-container {
-            position: sticky;
-            top: 0;
+            position: sticky; top: 0;
             background: rgba(249, 249, 247, 0.95);
             backdrop-filter: blur(10px);
             z-index: 50;
             padding: 12px 0;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .day-nav {
-            display: flex;
-            overflow-x: auto;
-            padding: 0 15px;
-            gap: 12px;
-            scrollbar-width: none;
-        }
+        .day-nav { display: flex; overflow-x: auto; padding: 0 15px; gap: 12px; scrollbar-width: none; }
         .day-nav::-webkit-scrollbar { display: none; }
         .day-btn {
-            flex: 0 0 auto;
-            min-width: 60px;
-            height: 65px;
-            border-radius: 16px;
-            background: white;
+            flex: 0 0 auto; min-width: 60px; height: 65px;
+            border-radius: 16px; background: white;
             border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s;
             color: var(--text-sub);
         }
         .day-btn.active {
-            background: var(--primary);
-            color: white;
+            background: var(--primary); color: white;
             border-color: var(--primary);
             box-shadow: 0 4px 12px rgba(91, 137, 150, 0.3);
             transform: translateY(-2px);
@@ -145,200 +111,174 @@
         .day-btn span:first-child { font-size: 13px; font-weight: bold; }
         .day-btn span:last-child { font-size: 10px; opacity: 0.8; }
 
-        /* 天氣卡片 */
+        /* Weather */
         .weather-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 18px 20px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border: 1px solid var(--border);
+            background: var(--card-bg); border-radius: 16px;
+            padding: 18px 20px; margin: 20px 0;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border);
         }
 
-        /* 行程時間軸 */
-        .timeline {
-            position: relative;
-            padding-left: 20px;
-            margin-top: 10px;
-        }
+        /* Timeline */
+        .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
         .timeline::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            bottom: 30px;
-            left: 26px;
-            width: 2px;
-            background: #E8E8E8;
-            z-index: 0;
+            content: ''; position: absolute;
+            top: 15px; bottom: 30px; left: 26px;
+            width: 2px; background: #E8E8E8; z-index: 0;
         }
 
-        .event-group {
-            position: relative;
-            margin-bottom: 25px;
-            z-index: 5;
-            display: flex;
-            gap: 15px;
+        .event-group { position: relative; margin-bottom: 25px; z-index: 5; display: flex; gap: 15px; }
+        .event-group::before {
+            content: ''; position: absolute;
+            left: 23px; top: 17px;
+            width: 8px; height: 8px;
+            border-radius: 50%; background: white;
+            border: 2px solid var(--primary); z-index: 2;
         }
 
         .time-col {
-            flex: 0 0 58px;
-            text-align: right;
-            padding-top: 10px;
-            position: relative;
-            z-index: 10;
-            background: var(--bg-color); /* 避免被背景點遮蓋 */
+            flex: 0 0 58px; text-align: right;
+            padding-top: 10px; position: relative;
+            z-index: 10; background: var(--bg-color);
         }
         .time-start { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'Roboto', sans-serif; }
         .time-dur { font-size: 10px; color: var(--text-sub); display: block; margin-top: 2px; }
 
         .event-card {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 15px;
+            flex: 1; background: var(--card-bg);
+            border-radius: 16px; padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             border: 1px solid var(--border);
             position: relative;
+            transition: transform 0.2s;
         }
 
-        /* 機票樣式行程卡 */
+        /* 可點擊的卡片樣式 */
+        .event-card.clickable { cursor: pointer; border-bottom: 3px solid var(--accent); }
+        .event-card.clickable:active { transform: scale(0.98); background: #fafafa; }
+        
+        .click-hint {
+            font-size: 11px; color: var(--accent);
+            background: rgba(224, 122, 95, 0.1);
+            padding: 4px 8px; border-radius: 4px;
+            display: inline-block; margin-top: 8px; font-weight: 500;
+        }
+
+        /* Ticket Card */
         .ticket-card {
-            flex: 1;
-            background: var(--tag-flight);
-            color: white;
-            border-radius: 16px;
-            padding: 0;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: relative;
+            flex: 1; background: var(--tag-flight); color: white;
+            border-radius: 16px; padding: 0; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
         }
         .ticket-header {
-            background: rgba(255,255,255,0.1);
-            padding: 8px 15px;
-            font-size: 11px;
-            display: flex;
-            justify-content: space-between;
-            letter-spacing: 1px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1); padding: 8px 15px;
+            font-size: 11px; display: flex; justify-content: space-between;
+            letter-spacing: 1px; border-bottom: 1px dashed rgba(255,255,255,0.2);
         }
-        .ticket-body {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .ticket-body { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .ticket-point { text-align: center; }
         .ticket-time { font-size: 22px; font-weight: bold; font-family: 'Roboto', sans-serif; }
         .ticket-city { font-size: 12px; opacity: 0.8; margin-top: 2px; }
         .ticket-arrow { flex: 1; text-align: center; position: relative; padding: 0 10px; }
-        .ticket-arrow::after {
-            content: '✈';
-            font-size: 16px;
-        }
-        .ticket-footer {
-            padding: 10px 15px;
-            background: white;
-            color: var(--text-main);
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .ticket-arrow::after { content: '✈'; font-size: 16px; }
+        .ticket-footer { padding: 10px 15px; background: white; color: var(--text-main); font-size: 12px; display: flex; align-items: center; gap: 8px; }
 
-        /* 交通間隔時間 */
-        .transport-spacer {
-            margin: -15px 0 15px 73px;
-            position: relative;
-            padding-left: 15px;
-        }
+        /* Transport */
+        .transport-spacer { margin: -15px 0 15px 73px; position: relative; padding-left: 15px; }
         .transport-line {
-            position: absolute;
-            left: -47px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
+            position: absolute; left: -47px; top: 0; bottom: 0; width: 2px;
             background: repeating-linear-gradient(to bottom, #E8E8E8, #E8E8E8 4px, transparent 4px, transparent 8px);
         }
         .transport-tag {
-            background: #F0F0F0;
-            color: var(--text-sub);
-            font-size: 11px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            background: #F0F0F0; color: var(--text-sub);
+            font-size: 11px; padding: 4px 12px; border-radius: 20px;
+            display: inline-flex; align-items: center; gap: 5px;
             border: 1px solid var(--border);
         }
 
-        .event-group::before {
-            content: '';
-            position: absolute;
-            left: 23px;
-            top: 17px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--primary);
-            z-index: 2;
-        }
-
-        .tag {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
+        .tag { font-size: 10px; padding: 2px 8px; border-radius: 6px; display: inline-block; margin-bottom: 8px; font-weight: 600; }
         .evt-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; line-height: 1.4; color: var(--text-main); }
         .evt-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
         
-        .map-btn, .pdf-btn, .reservation-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: var(--primary);
-            text-decoration: none;
-            background: rgba(91, 137, 150, 0.1);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            margin-right: 10px;
+        .map-btn {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; color: var(--primary); text-decoration: none;
+            background: rgba(91, 137, 150, 0.1); padding: 6px 12px;
+            border-radius: 20px; font-weight: 500; margin-top: 5px;
         }
 
+        /* 彈出視窗 (Modal) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; z-index: 2000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            backdrop-filter: blur(5px);
+            align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal.show { display: flex; opacity: 1; }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 15px;
+            padding: 0;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid #eee;
+            position: sticky; top: 0; background: white; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { font-size: 18px; font-weight: bold; color: var(--primary); }
+        .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
+        
+        .modal-body { padding: 20px; }
+        
+        .option-item {
+            border: 1px solid #eee; border-radius: 12px;
+            padding: 15px; margin-bottom: 15px;
+            background: #fafafa;
+        }
+        .opt-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .opt-tag { font-size: 11px; background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-weight: normal; }
+        .opt-desc { font-size: 13px; color: #666; margin-bottom: 8px; line-height: 1.4; }
+        .opt-rec { font-size: 12px; color: var(--primary); background: rgba(91,137,150,0.1); padding: 5px 10px; border-radius: 6px; display: inline-block; margin-bottom: 10px; }
+
+        /* Bottom Nav */
         .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
+            position: fixed; bottom: 0; left: 0; right: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            padding: 10px 0 25px 0;
-            z-index: 1000;
+            display: flex; padding: 10px 0 25px 0; z-index: 1000;
         }
         .nav-item { flex: 1; text-align: center; cursor: pointer; color: #C0C0C0; }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
         .nav-label { font-size: 10px; font-weight: 500; }
 
+        .hidden { display: none; }
+        
+        /* List Page */
         .list-header { display: flex; background: #F0F0F0; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
         .list-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; border-radius: 8px; color: var(--text-sub); cursor: pointer; }
         .list-tab.active { background: white; color: var(--text-main); font-weight: bold; }
-        
         .todo-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); }
         .todo-item.checked { opacity: 0.6; background: #fbfbfb; }
         .todo-item.checked .todo-text { text-decoration: line-through; }
-        
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); }
         .todo-text { font-size: 14px; flex: 1; }
-        .hidden { display: none; }
+
     </style>
 </head>
 <body>
@@ -361,18 +301,14 @@
     </div>
 
     <div class="container">
-        <!-- 天氣卡片 -->
         <div class="weather-card">
             <div class="w-info">
                 <h3 id="w-loc">讀取天氣中...</h3>
                 <p id="w-desc">--</p>
             </div>
-            <div style="text-align: right; display: flex; align-items: center; gap: 10px;">
-                <div id="w-icon" style="font-size: 30px;">⛅</div>
-                <div>
-                    <div id="w-temp" style="font-size: 24px; font-weight: bold; color: var(--primary);">--°</div>
-                    <div style="font-size: 12px; color: var(--accent);">☔ <span id="w-rain">--%</span></div>
-                </div>
+            <div style="text-align: right;">
+                <div id="w-temp" style="font-size: 24px; font-weight: bold; color: var(--primary);">--°</div>
+                <div style="font-size: 12px; color: var(--accent);">☔ <span id="w-rain">--%</span></div>
             </div>
         </div>
 
@@ -380,7 +316,6 @@
     </div>
 </div>
 
-<!-- 清單頁面 -->
 <div id="page-list" class="container hidden" style="padding-top: 40px;">
     <h2 style="margin-bottom: 20px; font-weight: 700;">旅行清單</h2>
     <div class="list-header">
@@ -391,7 +326,17 @@
     <div id="list-content"></div>
 </div>
 
-<!-- 底部導航 -->
+<div id="option-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title" id="modal-title">餐廳選項</div>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body">
+            </div>
+    </div>
+</div>
+
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchPage('itinerary')" id="nav-itinerary">
         <span class="nav-icon">🗺️</span>
@@ -404,6 +349,7 @@
 </nav>
 
 <script>
+    // 資料結構優化：加入 options 數組
     const itineraryData = {
         1: {
             date: "1/1 (週四)",
@@ -412,45 +358,55 @@
                 { transport: "15mins 接送", icon: "🚐" },
                 { time: "17:30", dur: "30min", type: "transport", title: "取車", desc: "OkiBlues 中文租車公司", loc: "Oki Blues 中文租車公司" },
                 { transport: "1hr 駕車至北谷", icon: "🚗" },
-                { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort", pdf: "lequ_booking_confirmation.pdf" },
+                { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort" },
                 { transport: "5min 步行", icon: "🚶" },
-                { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村是沖繩最大的美國風情購物區，充滿特色商店、餐廳和Instagram打卡點，適合漫步和拍照。", loc: "美國村" },
-                { time: "21:00", dur: "1.5hr", type: "food", title: "晚餐: 琉球之牛", desc: "北谷店 (已預約)", loc: "琉球之牛 北谷店", reservation_url: "https://www.tablecheck.com/zh-TW/reservations/3NPHLW" },
+                { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村漫步", loc: "美國村" },
+                { time: "21:00", dur: "1.5hr", type: "food", title: "晚餐: 琉球之牛", desc: "北谷店 (已預約)", loc: "琉球之牛 北谷店" },
                 { time: "22:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
             ]
         },
         2: {
             date: "1/2 (週五)",
             events: [
-                { time: "08:30", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
+                { time: "08:30", dur: "1hr", type: "food", title: "酒店早餐", desc: "LeQu Okinawa", loc: "" },
                 { transport: "40min 駕車", icon: "🚗" },
-                { time: "10:30", dur: "45min", type: "spot", title: "萬座毛", desc: "象鼻狀懸崖伸入東中國海，20米高琉球石灰岩絕景，提供壯麗海景和日落觀賞。", loc: "萬座毛" },
+                { time: "10:30", dur: "45min", type: "spot", title: "萬座毛", desc: "象鼻岩絕景", loc: "萬座毛" },
                 { transport: "30min 駕車", icon: "🚗" },
                 { time: "11:45", dur: "15min", type: "food", title: "許田休息站", desc: "道之驛許田：半熟乳酪蛋糕、布丁", loc: "許田休息站" },
                 { transport: "40min 駕車", icon: "🚗" },
-                { time: "12:40", dur: "2.5hr", type: "spot", title: "古宇利島 & 午餐", desc: "小島擁有細沙海灘、心形岩石和大橋美景，充滿沖繩亞當夏娃傳說，適合駕車探索和享用蝦蝦飯。", loc: "古宇利島" },
+                { time: "12:40", dur: "2.5hr", type: "spot", title: "古宇利島 & 午餐", desc: "古宇利大橋、心形岩、蝦蝦飯", loc: "古宇利島" },
                 { transport: "45min 駕車", icon: "🚗" },
-                { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "世界最大級黑潮之海水槽，展示沖繩神秘海洋生物，包括鯨鯊和魔鬼魚（4點後星光票價）。", loc: "美麗海水族館" },
-		{ transport: "1hr15min 駕車", icon: "🚗" },
-		{ time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:北谷町", desc: "Taco Rice Cafe Kijimuna Depot Island / グルメ迴轉壽司市場", loc: "American Village" },
-		{ time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
+                { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "黑潮之海 4點後星光票價", loc: "美麗海水族館" },
+                { transport: "1hr15min 駕車", icon: "🚗" },
+                // Day 2 晚餐加入選項
+                { 
+                    time: "20:00", dur: "1.5hr", type: "food", 
+                    title: "晚餐: 北谷町選項", 
+                    desc: "塔可飯 或 迴轉壽司 (點擊查看詳情)", 
+                    loc: "美國村",
+                    hasOptions: true,
+                    options: [
+                        { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁，份量十足。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
+                        { name: "グルメ迴轉壽司市場", desc: "美國村人氣排隊名店，食材新鮮，CP值高。", rec: "推介：鮭魚、鮪魚腹肉", loc: "グルメ回転寿司市場 美浜店" }
+                    ]
+                },
+                { time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
             ]
         },
         3: {
             date: "1/3 (週六)",
             events: [
-                { time: "09:00", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
-                { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店、餐廳和Instagram打卡點。", loc: "美國村" },
+                { time: "09:00", dur: "1hr", type: "food", title: "早餐", desc: "", loc: "" },
+                { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村", loc: "美國村" },
                 { transport: "20min 駕車", icon: "🚗" },
                 { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: nankuru796", desc: "究極沖繩麵", loc: "沖縄そば ナンクル796" },
                 { transport: "20min 駕車", icon: "🚗" },
                 { time: "13:15", dur: "5.5hr", type: "shop", title: "Aeon Mall Rycom", desc: "沖繩最大購物中心 & Pokemon Store", loc: "Aeon Mall Okinawa Rycom" },
                 { transport: "45min 駕車", icon: "🚗" },
-                { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha", pdf: "lagent_booking_confirmation.pdf" },
-		{ transport: "10min 步行", icon: "🚶" },
-		{ time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房", pdf: "Visa 食彩酒房 booking.pdf" },
-		{ time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
-
+                { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha" },
+                { transport: "10min 步行", icon: "🚶" },
+                { time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房" },
+                { time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
             ]
         },
         4: {
@@ -458,32 +414,54 @@
             events: [
                 { time: "09:00", dur: "1hr", type: "food", title: "早餐: 第一牧志公設市場", desc: "體驗在地魚市場早餐", loc: "第一牧志公設市場" },
                 { transport: "20min 駕車", icon: "🚗" },
-                { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "琉球王國古城，融合中日建築，包含達磨寺和首里城公園，體現沖繩歷史文化。", loc: "首里城" },
+                { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "達磨寺、首里城公園", loc: "首里城" },
                 { transport: "10min 駕車", icon: "🚗" },
                 { time: "11:40", dur: "1.5hr", type: "food", title: "午餐: 古民家食堂", desc: "傳統民房享用炸豬排", loc: "古民家食堂" },
                 { transport: "30min 駕車", icon: "🚗" },
-                { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館，體驗傳統文化和太鼓表演。", loc: "沖繩世界" },
+                { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "玉泉洞鐘乳石、太鼓秀", loc: "沖繩世界" },
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "16:45", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-		{ transport: "10min 步行", icon: "🚶" },
-		{ time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演，適合晚餐和逛街（屋台或牛排）。", loc: "國際通" },
-		{ transport: "10min 步行", icon: "🚶" },
-		{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
+                { transport: "10min 步行", icon: "🚶" },
+                // Day 4 晚餐加入選項
+                { 
+                    time: "17:00", dur: "3.5hr", type: "spot", 
+                    title: "國際通晚餐 & 逛街", 
+                    desc: "屋台村 或 88牛排 (點擊查看)", 
+                    loc: "國際通",
+                    hasOptions: true,
+                    options: [
+                        { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧，適合想吃多樣化料理的人。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
+                        { name: "Steak House 88", desc: "美式風格老牌牛排館，深受當地人喜愛。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
+                    ]
+                },
+                { transport: "10min 步行", icon: "🚶" },
+                { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
             ]
         },
         5: {
             date: "1/5 (週一)",
             events: [
-                { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社，俯瞰那霸海灘和海洋，琉球神道聖地，適合參拜和欣賞海景。", loc: "波上宮" },
+                { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社、參拜", loc: "波上宮" },
                 { transport: "30min 駕車", icon: "🚗" },
-                { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: 暖暮拉麵", desc: "系滿店", loc: "暖暮拉麵 系滿店" },
+                // Day 5 午餐加入選項 (假設)
+                { 
+                    time: "11:30", dur: "1.5hr", type: "food", 
+                    title: "午餐: 系滿美食", 
+                    desc: "暖暮拉麵 或 系滿漁市場 (點擊查看)", 
+                    loc: "系滿市",
+                    hasOptions: true,
+                    options: [
+                        { name: "暖暮拉麵 系滿店", desc: "九州冠軍拉麵，系滿店通常比國際通店排隊人少。", rec: "推介：半熟蛋拉麵、一口餃子", loc: "暖暮拉麵 系滿店" },
+                        { name: "系滿漁市場", desc: "新鮮便宜的海鮮市場，適合想吃生魚片、焗烤龍蝦的人。", rec: "推介：海膽醬焗烤龍蝦", loc: "系滿漁市場" }
+                    ]
+                },
                 { transport: "10min 駕車", icon: "🚗" },
                 { time: "13:10", dur: "5hr", type: "shop", title: "Ashibinaa Outlet", desc: "品牌折扣購物中心", loc: "Ashibinaa Outlet" },
                 { transport: "40min 駕車", icon: "🚗" },
-		{ time: "18:55", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-		{ transport: "5min 步行", icon: "🚶" },
+                { time: "18:55", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
+                { transport: "5min 步行", icon: "🚶" },
                 { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那霸久茂地店 厚切牛舌", loc: "燒肉ここから 那霸久茂地店" },
-		{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
+                { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
             ]
         },
         6: {
@@ -491,22 +469,13 @@
             events: [
                 { time: "10:00", dur: "", type: "hotel", title: "Check-out", desc: "退房準備", loc: "" },
                 { transport: "40min 駕車", icon: "🚗" },
-                { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島，提供購物、餐飲和日落觀賞（享用幸福鬆餅）。", loc: "瀨長島" },
+                { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "白色希臘風商圈、幸福鬆餅", loc: "瀨長島" },
                 { transport: "25min 駕車", icon: "🚗" },
                 { time: "14:45", dur: "25min", type: "transport", title: "還車手續", desc: "OkiBlues 沖繩中文租車", loc: "Oki Blues 中文租車公司" },
                 { transport: "20min 接駁至機場", icon: "🚐" },
                 { time: "17:40", endTime: "19:25", dur: "2.5hr", type: "flight", title: "Flight FD 519", desc: "OKA -> HKG", loc: "那霸機場" }
             ]
         }
-    };
-
-    const dayLocations = {
-        1: { lat: 26.3200, lon: 127.7600, name: "北谷町 Chatan" },  // Day 1: 北谷
-        2: { lat: 26.5914, lon: 127.9771, name: "名護市 Nago" },    // Day 2: 北部
-        3: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 3: 那霸
-        4: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 4: 那霸
-        5: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" },    // Day 5: 那霸
-        6: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" }     // Day 6: 近那霸
     };
 
     const todoData = {
@@ -519,18 +488,15 @@
         flight: "var(--tag-flight)", food: "var(--tag-food)", spot: "var(--tag-spot)", hotel: "var(--tag-hotel)", shop: "var(--tag-shop)", transport: "var(--tag-transport)", drive: "var(--tag-transport)"
     };
 
-    let forecastData = null; // To store the 14-day forecast
-
-    const weatherIcons = {
-        0: '☀️', 1: '☀️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌧️', 53: '🌧️', 55: '🌧️', 56: '🌧️', 57: '🌧️', 61: '🌦️', 63: '🌧️', 65: '🌧️', 66: '🌧️', 67: '🌧️', 71: '❄️', 73: '❄️', 75: '❄️', 77: '❄️', 80: '🌧️', 81: '🌧️', 82: '🌧️', 85: '❄️', 86: '❄️', 95: '⛈️', 96: '⛈️', 99: '⛈️'
-    };
+    // 當前顯示的天數
+    let currentDay = 1;
 
     function init() {
         renderDayNav();
         renderItinerary(1);
         renderList('pre');
         updateCountdown();
-        fetchForecast(); // Fetch 14-day forecast once on init
+        fetchWeather();
     }
 
     function renderDayNav() {
@@ -543,11 +509,12 @@
     }
 
     function renderItinerary(day) {
+        currentDay = day;
         document.querySelectorAll('.day-btn').forEach((btn, idx) => btn.classList.toggle('active', (idx + 1) == day));
         const container = document.getElementById('itinerary-content');
         let html = '';
         
-        itineraryData[day].events.forEach(evt => {
+        itineraryData[day].events.forEach((evt, index) => {
             if (evt.transport) {
                 html += `
                     <div class="transport-spacer">
@@ -563,10 +530,7 @@
                         </div>
                         <div class="ticket-card">
                             <div class="ticket-header">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <img src="https://1000logos.net/wp-content/uploads/2020/04/AirAsia-Logo-2012.png" alt="Thai AirAsia Logo" style="height: 20px;">
-                                    <span>Thai AirAsia</span>
-                                </div>
+                                <span>BOARDING PASS</span>
                                 <span>${evt.title}</span>
                             </div>
                             <div class="ticket-body">
@@ -586,27 +550,74 @@
                         </div>
                     </div>`;
             } else {
-                const mapLink = evt.loc ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
-                const pdfLink = evt.pdf ? `<a href="${evt.pdf}" target="_blank" class="pdf-btn">📄 View Booking PDF</a>` : '';
-                const reservationLink = evt.reservation_url ? `<a href="${evt.reservation_url}" target="_blank" class="reservation-btn">📅 View Reservation</a>` : '';
+                // 一般行程卡
+                // 檢查是否有 options
+                const hasOptions = evt.hasOptions;
+                const clickAttr = hasOptions ? `onclick="openModal(${index})"` : '';
+                const clickClass = hasOptions ? 'clickable' : '';
+                const mapLink = (!hasOptions && evt.loc) ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
+                const optionHint = hasOptions ? `<div class="click-hint">👇 點擊選擇餐廳</div>` : '';
+
                 html += `
                     <div class="event-group">
                         <div class="time-col">
                             <span class="time-start">${evt.time}</span>
                             <span class="time-dur">${evt.dur}</span>
                         </div>
-                        <div class="event-card">
+                        <div class="event-card ${clickClass}" ${clickAttr}>
                             <span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
                             <div class="evt-title">${evt.title}</div>
                             <div class="evt-desc">${evt.desc}</div>
-                            ${reservationLink}${pdfLink}${mapLink}
+                            ${optionHint}
+                            ${mapLink}
                         </div>
                     </div>`;
             }
         });
         container.innerHTML = html;
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        updateWeatherCard(day); // Update weather card with forecast for the day
+    }
+
+    // Modal 功能
+    function openModal(eventIndex) {
+        const evt = itineraryData[currentDay].events[eventIndex];
+        if (!evt.hasOptions) return;
+
+        document.getElementById('modal-title').innerText = evt.title;
+        const body = document.getElementById('modal-body');
+        
+        let html = '';
+        evt.options.forEach(opt => {
+            html += `
+                <div class="option-item">
+                    <div class="opt-name">
+                        ${opt.name}
+                        ${opt.loc ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(opt.loc)}" target="_blank" style="text-decoration:none">🗺️</a>` : ''}
+                    </div>
+                    <div class="opt-desc">${opt.desc}</div>
+                    ${opt.rec ? `<div class="opt-rec">💡 ${opt.rec}</div>` : ''}
+                </div>
+            `;
+        });
+        body.innerHTML = html;
+        
+        const modal = document.getElementById('option-modal');
+        modal.style.display = "flex";
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('option-modal');
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = "none", 300);
+    }
+    
+    // 點擊 Modal 外部關閉
+    window.onclick = function(event) {
+        const modal = document.getElementById('option-modal');
+        if (event.target == modal) {
+            closeModal();
+        }
     }
 
     function getTagLabel(title, type) {
@@ -617,9 +628,7 @@
         return map[type] || "其他";
     }
 
-    function switchDay(day) { 
-        renderItinerary(day); 
-    }
+    function switchDay(day) { renderItinerary(day); }
 
     function renderList(tab) {
         document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop','food'][idx] === tab));
@@ -656,43 +665,18 @@
         document.getElementById('countdown-num').innerText = Math.max(0, Math.ceil(diff / 86400000));
     }
 
-    async function fetchForecast() {
+    async function fetchWeather() {
         try {
-            // Fetch 14-day forecast for a central location (Naha as default)
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14');
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&current=temperature_2m,weather_code,precipitation_probability&timezone=Asia%2FTokyo`);
             const data = await res.json();
-            forecastData = data.daily;
-            updateWeatherCard(1); // Update for initial day
-        } catch (e) {
-            document.getElementById('w-loc').innerText = "天氣暫時無法顯示";
-        }
-    }
-
-    function updateWeatherCard(day) {
-        if (!forecastData) return;
-
-        // Calculate the forecast index for the trip day (assuming trip starts on Jan 1, 2026)
-        const today = new Date();
-        const tripStart = new Date('2026-01-01');
-        const daysUntilTrip = Math.ceil((tripStart - today) / (1000 * 60 * 60 * 24));
-        const forecastIndex = daysUntilTrip + day - 1; // Day 1 is index daysUntilTrip, etc.
-
-        if (forecastIndex < 0 || forecastIndex >= forecastData.time.length) {
-            document.getElementById('w-loc').innerText = "預測不可用";
-            return;
-        }
-
-        const location = dayLocations[day] || { name: "那霸市 Naha" };
-        const maxTemp = Math.round(forecastData.temperature_2m_max[forecastIndex]);
-        const minTemp = Math.round(forecastData.temperature_2m_min[forecastIndex]);
-        const code = forecastData.weather_code[forecastIndex];
-        const precip = forecastData.precipitation_probability_mean[forecastIndex] || 0;
-
-        document.getElementById('w-loc').innerText = location.name + " (預測)";
-        document.getElementById('w-temp').innerText = maxTemp + "° / " + minTemp + "°";
-        document.getElementById('w-rain').innerText = precip + "%";
-        document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "降雨";
-        document.getElementById('w-icon').innerText = weatherIcons[code] || '⛅';
+            if (data.current) {
+                document.getElementById('w-loc').innerText = "那霸市 Naha";
+                document.getElementById('w-temp').innerText = Math.round(data.current.temperature_2m) + "°";
+                document.getElementById('w-rain').innerText = (data.current.precipitation_probability || 0) + "%";
+                const code = data.current.weather_code;
+                document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "降雨";
+            }
+        } catch (e) { document.getElementById('w-loc').innerText = "天氣暫時無法顯示"; }
     }
 
     init();
