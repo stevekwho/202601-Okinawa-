@@ -131,7 +131,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
         }
         .ticket-header {
-            background: rgba(255,255,255,0.1); padding: 8px 15px; font-size: 11px;
+            background: rgba(255,255,255,0.1); padding: 8px 15px; font-size: 13px; /* 放大字體 */
             display: flex; justify-content: space-between; letter-spacing: 1px;
             border-bottom: 1px dashed rgba(255,255,255,0.2);
         }
@@ -209,8 +209,8 @@
         }
         .nav-item { flex: 1; text-align: center; cursor: pointer; color: #C0C0C0; }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-label { font-size: 10px; font-weight: 500; }
+        .nav-icon { font-size: 24px; display: block; margin-bottom: 4px; } /* 放大圖標 */
+        .nav-label { font-size: 12px; font-weight: 500; } /* 放大字體 */
 
         .list-header { display: flex; background: #F0F0F0; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
         .list-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; border-radius: 8px; color: var(--text-sub); cursor: pointer; }
@@ -252,7 +252,7 @@
     </div>
 
     <div class="container">
-        <!-- V2 天氣卡片邏輯 -->
+        <!-- 天氣卡片 -->
         <div class="weather-card">
             <div class="w-info">
                 <h3 id="w-loc">讀取天氣中...</h3>
@@ -271,6 +271,7 @@
     </div>
 </div>
 
+<!-- 清單頁面 -->
 <div id="page-list" class="container hidden" style="padding-top: 40px;">
     <h2 style="margin-bottom: 20px; font-weight: 700;">旅行清單</h2>
     <div class="list-header">
@@ -281,17 +282,7 @@
     <div id="list-content"></div>
 </div>
 
-<!-- Modal -->
-<div id="option-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title" id="modal-title">餐廳選項</div>
-            <span class="close-btn" onclick="closeModal()">×</span>
-        </div>
-        <div class="modal-body" id="modal-body"></div>
-    </div>
-</div>
-
+<!-- 底部導航 -->
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchPage('itinerary')" id="nav-itinerary">
         <span class="nav-icon">🗺️</span>
@@ -304,12 +295,11 @@
 </nav>
 
 <script>
-    // 資料結構：融合 V2 詳細資訊 + V3 選項功能
     const itineraryData = {
         1: {
             date: "1/1 (週四)",
             events: [
-                { time: "13:10", endTime: "16:40", dur: "3.5hr", type: "flight", title: "Flight FD 518", desc: "HKG -> OKA", loc: "那霸機場" },
+                { time: "13:10", endTime: "16:40", dur: "3.5hr", type: "flight", title: "FD 518", desc: "HKG -> OKA", loc: "那霸機場" },
                 { transport: "15mins 接送", icon: "🚐" },
                 { time: "17:30", dur: "30min", type: "transport", title: "取車", desc: "OkiBlues 中文租車公司", loc: "Oki Blues 中文租車公司" },
                 { transport: "1hr 駕車至北谷", icon: "🚗" },
@@ -332,26 +322,15 @@
                 { time: "12:40", dur: "2.5hr", type: "spot", title: "古宇利島 & 午餐", desc: "小島擁有細沙海灘、心形岩石和大橋美景，充滿沖繩亞當夏娃傳說，適合駕車探索和享用蝦蝦飯。", loc: "古宇利島" },
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "世界最大級黑潮之海水槽，展示沖繩神秘海洋生物，包括鯨鯊和魔鬼魚（4點後星光票價）。", loc: "美麗海水族館" },
-                { transport: "1hr15min 駕車", icon: "🚗" },
-                // V3 Feature: 晚餐選項
-                { 
-                    time: "20:00", dur: "1.5hr", type: "food", 
-                    title: "晚餐: 北谷町選項", 
-                    desc: "塔可飯 或 迴轉壽司 (點擊選餐廳)", 
-                    loc: "美國村",
-                    hasOptions: true,
-                    options: [
-                        { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
-                        { name: "グルメ迴轉壽司市場", desc: "人氣排隊名店，食材新鮮，CP值高。", rec: "推介：鮭魚、鮪魚腹肉", loc: "グルメ回転寿司市場 美浜店" }
-                    ]
-                },
-                { time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
+		{ transport: "1hr15min 駕車", icon: "🚗" },
+		{ time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:北谷町", desc: "Taco Rice Cafe Kijimuna Depot Island / グルメ迴轉壽司市場", loc: "American Village" },
+		{ time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
             ]
         },
         3: {
             date: "1/3 (週六)",
             events: [
-                { time: "09:00", dur: "1hr", type: "food", title: "早餐", desc: "", loc: "" },
+                { time: "09:00", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
                 { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店、餐廳和Instagram打卡點。", loc: "美國村" },
                 { transport: "20min 駕車", icon: "🚗" },
                 { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: nankuru796", desc: "究極沖繩麵", loc: "沖縄そば ナンクル796" },
@@ -359,9 +338,10 @@
                 { time: "13:15", dur: "5.5hr", type: "shop", title: "Aeon Mall Rycom", desc: "沖繩最大購物中心 & Pokemon Store", loc: "Aeon Mall Okinawa Rycom" },
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha", pdf: "lagent_booking_confirmation.pdf" },
-                { transport: "10min 步行", icon: "🚶" },
-                { time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房", pdf: "Visa 食彩酒房 booking.pdf" },
-                { time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
+		{ transport: "10min 步行", icon: "🚶" },
+		{ time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房", pdf: "Visa 食彩酒房 booking.pdf" },
+		{ time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
+
             ]
         },
         4: {
@@ -376,21 +356,10 @@
                 { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館，體驗傳統文化和太鼓表演。", loc: "沖繩世界" },
                 { transport: "45min 駕車", icon: "🚗" },
                 { time: "16:45", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-                { transport: "10min 步行", icon: "🚶" },
-                // V3 Feature: 晚餐選項
-                { 
-                    time: "17:00", dur: "3.5hr", type: "spot", 
-                    title: "國際通晚餐 & 逛街", 
-                    desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演。(點擊選餐廳)", 
-                    loc: "國際通",
-                    hasOptions: true,
-                    options: [
-                        { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
-                        { name: "Steak House 88", desc: "美式風格老牌牛排館。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
-                    ]
-                },
-                { transport: "10min 步行", icon: "🚶" },
-                { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
+		{ transport: "10min 步行", icon: "🚶" },
+		{ time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演，適合晚餐和逛街（屋台或牛排）。", loc: "國際通" },
+		{ transport: "10min 步行", icon: "🚶" },
+		{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
             ]
         },
         5: {
@@ -398,25 +367,14 @@
             events: [
                 { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社，俯瞰那霸海灘和海洋，琉球神道聖地，適合參拜和欣賞海景。", loc: "波上宮" },
                 { transport: "30min 駕車", icon: "🚗" },
-                // V3 Feature: 午餐選項
-                { 
-                    time: "11:30", dur: "1.5hr", type: "food", 
-                    title: "午餐: 系滿美食", 
-                    desc: "暖暮拉麵 或 系滿漁市場 (點擊選餐廳)", 
-                    loc: "系滿市",
-                    hasOptions: true,
-                    options: [
-                        { name: "暖暮拉麵 系滿店", desc: "九州冠軍拉麵，系滿店排隊人少。", rec: "推介：半熟蛋拉麵", loc: "暖暮拉麵 系滿店" },
-                        { name: "系滿漁市場", desc: "新鮮便宜海鮮，適合吃生魚片。", rec: "推介：海膽醬焗烤龍蝦", loc: "系滿漁市場" }
-                    ]
-                },
+                { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: 暖暮拉麵", desc: "系滿店", loc: "暖暮拉麵 系滿店" },
                 { transport: "10min 駕車", icon: "🚗" },
                 { time: "13:10", dur: "5hr", type: "shop", title: "Ashibinaa Outlet", desc: "品牌折扣購物中心", loc: "Ashibinaa Outlet" },
                 { transport: "40min 駕車", icon: "🚗" },
-                { time: "18:55", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-                { transport: "5min 步行", icon: "🚶" },
+		{ time: "18:55", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
+		{ transport: "5min 步行", icon: "🚶" },
                 { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那霸久茂地店 厚切牛舌", loc: "燒肉ここから 那霸久茂地店" },
-                { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
+		{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
             ]
         },
         6: {
@@ -428,7 +386,7 @@
                 { transport: "25min 駕車", icon: "🚗" },
                 { time: "14:45", dur: "25min", type: "transport", title: "還車手續", desc: "OkiBlues 沖繩中文租車", loc: "Oki Blues 中文租車公司" },
                 { transport: "20min 接駁至機場", icon: "🚐" },
-                { time: "17:40", endTime: "19:25", dur: "2.5hr", type: "flight", title: "Flight FD 519", desc: "OKA -> HKG", loc: "那霸機場" }
+                { time: "17:40", endTime: "19:25", dur: "2.5hr", type: "flight", title: "FD 519", desc: "OKA -> HKG", loc: "那霸機場" }
             ]
         }
     };
@@ -699,4 +657,3 @@
 </script>
 </body>
 </html>
-
