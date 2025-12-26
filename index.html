@@ -205,13 +205,12 @@
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex; padding: 8px 0 20px 0; /* 減少padding以瘦身 */
-            z-index: 1000;
+            display: flex; padding: 10px 0 25px 0; z-index: 1000;
         }
         .nav-item { flex: 1; text-align: center; cursor: pointer; color: #C0C0C0; }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 24px; display: block; margin-bottom: 4px; } /* 放大圖標 */
-        .nav-label { font-size: 13px; font-weight: 500; } /* 放大字體 */
+        .nav-label { font-size: 12px; font-weight: 500; } /* 放大字體 */
 
         .list-header { display: flex; background: #F0F0F0; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
         .list-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; border-radius: 8px; color: var(--text-sub); cursor: pointer; }
@@ -231,15 +230,6 @@
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); margin-right: 12px; }
         .todo-text { font-size: 14px; flex: 1; }
         .hidden { display: none; }
-
-        /* New Add/Delete for Pre List */
-        .add-item-container { margin: 20px 0; display: flex; gap: 10px; }
-        #new-pre-item { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
-        .add-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .delete-btn { cursor: pointer; color: #D32F2F; font-size: 18px; }
-
-        /* Category Styles for Pre List */
-        .category-header { font-size: 16px; font-weight: bold; color: var(--primary); margin: 20px 0 10px 0; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -303,17 +293,6 @@
         <span class="nav-label">清單</span>
     </div>
 </nav>
-
-<!-- Modal (V3) -->
-<div id="option-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <span class="modal-title"></span>
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-        </div>
-        <div class="modal-body" id="modal-body"></div>
-    </div>
-</div>
 
 <script>
     const itineraryData = {
@@ -422,16 +401,9 @@
         6: { lat: 26.2124, lon: 127.6809, name: "那霸市 Naha" }
     };
 
-    // 清單資料 (已更新: Shop 為詳細物件格式, pre 為分組結構)
+    // 清單資料 (已更新: Shop 為詳細物件格式)
     const todoData = {
-        pre: [
-            { category: "Documents & Money", items: ["Passport (HK)", "Passport BNO", "HKID", "Cash", "Credit card", "Hotel booking confirmation", "Flight tickets", "Travel insurance documents", "International Driving Permit", "Yen cash", "Visit Japan Web registration"] },
-            { category: "Electronics", items: ["SIM card", "Power bank", "Charging cables", "Power plug", "Travel adaptor", "Portable WiFi router"] },
-            { category: "Clothing", items: ["Clothes", "Underwear", "Socks", "Sneakers", "Pajamas", "Bags", "Sunglasses", "Contact lenses", "Longchamp carry-on bag", "Rain poncho"] },
-            { category: "Toiletries", items: ["Toothpaste", "Toothbrush", "Shower gel", "Conditioner", "Face wash", "Body lotion", "Hand cream", "Eye drops"] },
-            { category: "Skincare & Cosmetics", items: ["Skincare products", "Makeup remover", "Face masks", "Sunscreen", "Perfume", "Cotton pads"] },
-            { category: "Miscellaneous", items: ["Umbrella", "Face masks", "Wet tissues", "Tissue paper", "Plastic bags", "Pens", "Comb", "Hair ties", "Sanitary napkins", "Motion sickness pills", "Over-the-counter medicine", "Suica/ICOCA card"] }
-        ],
+        pre: ["護照 (有效期6個月)", "國際駕照 (IDP)", "日圓現金", "Visit Japan Web 登錄", "保險證明", "行動電源", "漫遊卡/WiFi"],
         shop: [
             { name: "Panasonic 吹風機 NA0J", loc: "Bic Camera / Kojima", price: "約 ¥38,610" },
             { name: "合利他命 EX Plus (270錠)", loc: "大國藥妝", price: "約 ¥4,980" },
@@ -456,56 +428,11 @@
     let currentDay = 1;
 
     function init() {
-        loadPreList();  // 加載自定義pre列表
         renderDayNav();
         renderItinerary(1);
         renderList('pre');
         updateCountdown();
         fetchForecast(); 
-    }
-
-    // 加載/保存pre列表到localStorage
-    function loadPreList() {
-        const savedPre = localStorage.getItem('okinawa_pre_list');
-        if (savedPre) {
-            todoData.pre = JSON.parse(savedPre);
-        } else {
-            savePreList();
-        }
-    }
-
-    function savePreList() {
-        localStorage.setItem('okinawa_pre_list', JSON.stringify(todoData.pre));
-    }
-
-    // 添加項目 (預設加到Miscellaneous)
-    function addPreItem() {
-        const input = document.getElementById('new-pre-item');
-        const newItem = input.value.trim();
-        if (newItem) {
-            // 找到Miscellaneous類別並添加
-            const miscCategory = todoData.pre.find(cat => cat.category === "Miscellaneous");
-            if (miscCategory) {
-                miscCategory.items.push(newItem);
-            } else {
-                // 如果沒有，創建新類別
-                todoData.pre.push({ category: "Miscellaneous", items: [newItem] });
-            }
-            savePreList();
-            renderList('pre');
-            input.value = '';
-        }
-    }
-
-    // 刪除項目
-    function deletePreItem(categoryIndex, itemIndex) {
-        todoData.pre[categoryIndex].items.splice(itemIndex, 1);
-        // 如果類別空了，刪除類別
-        if (todoData.pre[categoryIndex].items.length === 0) {
-            todoData.pre.splice(categoryIndex, 1);
-        }
-        savePreList();
-        renderList('pre');
     }
 
     function renderDayNav() {
@@ -640,56 +567,32 @@
     function renderList(tab) {
         document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop','food'][idx] === tab));
         const container = document.getElementById('list-content');
-        let html = '';
         
-        if (tab === 'pre') {
-            html += `
-                <div class="add-item-container">
-                    <input type="text" id="new-pre-item" placeholder="添加新項目...">
-                    <button class="add-btn" onclick="addPreItem()">添加</button>
-                </div>`;
-            todoData.pre.forEach((cat, catIndex) => {
-                html += `<div class="category-header">${cat.category}</div>`;
-                cat.items.forEach((item, itemIndex) => {
-                    const id = `pre-${catIndex}-${itemIndex}`;
-                    const checked = localStorage.getItem('okinawa_todo_' + id) === 'true';
-                    html += `
-                        <label class="todo-item ${checked ? 'checked' : ''}" id="row-${id}">
-                            <input type="checkbox" id="${id}" onchange="toggleCheck('${id}')" ${checked ? 'checked' : ''}>
-                            <span class="todo-text">${item}</span>
-                            <span class="delete-btn" onclick="deletePreItem(${catIndex}, ${itemIndex})">🗑️</span>
-                        </label>`;
-                });
-            });
-        } else {
-            html += todoData[tab].map((item, index) => {
-                const id = `${tab}-${index}`;
-                const checked = localStorage.getItem('okinawa_todo_' + id) === 'true';
-                
-                // 特別處理 Shop 的詳細顯示
-                let contentHtml = '';
-                if (tab === 'shop' && typeof item === 'object') {
-                    contentHtml = `
-                        <div class="shop-item-content">
-                            <div class="shop-header">
-                                <span class="shop-name">${item.name}</span>
-                                <span class="shop-price">${item.price}</span>
-                            </div>
-                            <span class="shop-loc">📍${item.loc}</span>
-                        </div>`;
-                } else {
-                    contentHtml = `<span class="todo-text">${item}</span>`;
-                }
+        container.innerHTML = todoData[tab].map((item, index) => {
+            const id = `${tab}-${index}`;
+            const checked = localStorage.getItem('okinawa_todo_' + id) === 'true';
+            
+            // 特別處理 Shop 的詳細顯示
+            let contentHtml = '';
+            if (tab === 'shop' && typeof item === 'object') {
+                contentHtml = `
+                    <div class="shop-item-content">
+                        <div class="shop-header">
+                            <span class="shop-name">${item.name}</span>
+                            <span class="shop-price">${item.price}</span>
+                        </div>
+                        <span class="shop-loc">📍${item.loc}</span>
+                    </div>`;
+            } else {
+                contentHtml = `<span class="todo-text">${item}</span>`;
+            }
 
-                return `
-                    <label class="todo-item ${checked ? 'checked' : ''}" id="row-${id}">
-                        <input type="checkbox" id="${id}" onchange="toggleCheck('${id}')" ${checked ? 'checked' : ''}>
-                        ${contentHtml}
-                    </label>`;
-            }).join('');
-        }
-
-        container.innerHTML = html;
+            return `
+                <label class="todo-item ${checked ? 'checked' : ''}" id="row-${id}">
+                    <input type="checkbox" id="${id}" onchange="toggleCheck('${id}')" ${checked ? 'checked' : ''}>
+                    ${contentHtml}
+                </label>`;
+        }).join('');
     }
 
     function switchListTab(tab) { renderList(tab); }
