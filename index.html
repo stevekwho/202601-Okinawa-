@@ -230,6 +230,12 @@
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); margin-right: 12px; }
         .todo-text { font-size: 14px; flex: 1; }
         .hidden { display: none; }
+
+        /* New Add/Delete for Pre List */
+        .add-item-container { margin: 20px 0; display: flex; gap: 10px; }
+        #new-pre-item { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+        .add-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .delete-btn { cursor: pointer; color: #D32F2F; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -293,6 +299,17 @@
         <span class="nav-label">清單</span>
     </div>
 </nav>
+
+<!-- Modal (V3) -->
+<div id="option-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title"></span>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
 
 <script>
     const itineraryData = {
@@ -402,8 +419,19 @@
     };
 
     // 清單資料 (已更新: Shop 為詳細物件格式)
+    const initialPreList = [
+        "Passport (HK)", "Passport BNO", "HKID", "Cash", "Credit card", "Hotel booking confirmation", "Flight tickets", "Travel insurance documents",
+        "SIM card", "Power bank", "Charging cables", "Power plug", "Travel adaptor",
+        "Clothes", "Underwear", "Socks", "Sneakers", "Pajamas", "Bags", "Sunglasses", "Contact lenses",
+        "Longchamp carry-on bag",
+        "Toothpaste", "Toothbrush", "Shower gel", "Conditioner", "Face wash", "Body lotion", "Hand cream", "Eye drops",
+        "Skincare products", "Makeup remover", "Face masks", "Sunscreen", "Perfume", "Cotton pads",
+        "Umbrella", "Face masks", "Wet tissues", "Tissue paper", "Plastic bags", "Pens", "Comb",
+        "Hair ties", "Sanitary napkins"
+    ];
+
     const todoData = {
-        pre: ["護照 (有效期6個月)", "國際駕照 (IDP)", "日圓現金", "Visit Japan Web 登錄", "保險證明", "行動電源", "漫遊卡/WiFi"],
+        pre: initialPreList,  // 初始從PDF
         shop: [
             { name: "Panasonic 吹風機 NA0J", loc: "Bic Camera / Kojima", price: "約 ¥38,610" },
             { name: "合利他命 EX Plus (270錠)", loc: "大國藥妝", price: "約 ¥4,980" },
@@ -428,11 +456,45 @@
     let currentDay = 1;
 
     function init() {
+        loadPreList();  // 加載自定義pre列表
         renderDayNav();
         renderItinerary(1);
         renderList('pre');
         updateCountdown();
         fetchForecast(); 
+    }
+
+    // 加載/保存pre列表到localStorage
+    function loadPreList() {
+        const savedPre = localStorage.getItem('okinawa_pre_list');
+        if (savedPre) {
+            todoData.pre = JSON.parse(savedPre);
+        } else {
+            savePreList();
+        }
+    }
+
+    function savePreList() {
+        localStorage.setItem('okinawa_pre_list', JSON.stringify(todoData.pre));
+    }
+
+    // 添加項目
+    function addPreItem() {
+        const input = document.getElementById('new-pre-item');
+        const newItem = input.value.trim();
+        if (newItem) {
+            todoData.pre.push(newItem);
+            savePreList();
+            renderList('pre');
+            input.value = '';
+        }
+    }
+
+    // 刪除項目
+    function deletePreItem(index) {
+        todoData.pre.splice(index, 1);
+        savePreList();
+        renderList('pre');
     }
 
     function renderDayNav() {
@@ -567,8 +629,17 @@
     function renderList(tab) {
         document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop','food'][idx] === tab));
         const container = document.getElementById('list-content');
+        let html = '';
         
-        container.innerHTML = todoData[tab].map((item, index) => {
+        if (tab === 'pre') {
+            html += `
+                <div class="add-item-container">
+                    <input type="text" id="new-pre-item" placeholder="添加新項目...">
+                    <button class="add-btn" onclick="addPreItem()">添加</button>
+                </div>`;
+        }
+        
+        html += todoData[tab].map((item, index) => {
             const id = `${tab}-${index}`;
             const checked = localStorage.getItem('okinawa_todo_' + id) === 'true';
             
@@ -587,12 +658,17 @@
                 contentHtml = `<span class="todo-text">${item}</span>`;
             }
 
+            let deleteBtn = (tab === 'pre') ? `<span class="delete-btn" onclick="deletePreItem(${index})">🗑️</span>` : '';
+
             return `
                 <label class="todo-item ${checked ? 'checked' : ''}" id="row-${id}">
                     <input type="checkbox" id="${id}" onchange="toggleCheck('${id}')" ${checked ? 'checked' : ''}>
                     ${contentHtml}
+                    ${deleteBtn}
                 </label>`;
         }).join('');
+
+        container.innerHTML = html;
     }
 
     function switchListTab(tab) { renderList(tab); }
