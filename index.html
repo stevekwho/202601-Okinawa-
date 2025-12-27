@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 V6</title>
+    <title>2026 沖繩之旅 V7.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -86,12 +86,12 @@
         .day-btn span:first-child { font-size: 13px; font-weight: bold; }
         .day-btn span:last-child { font-size: 10px; opacity: 0.8; }
 
-        /* Weather Card Optimized */
+        /* Weather Card */
         .weather-card {
             background: var(--card-bg); border-radius: 16px; padding: 18px 20px;
             margin: 20px 0; display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border);
-            min-height: 90px; /* 固定高度防止抖動 */
+            min-height: 90px;
         }
         #w-loc { transition: opacity 0.4s ease; }
 
@@ -113,10 +113,24 @@
             flex: 1; background: var(--card-bg); border-radius: 16px; padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border); position: relative;
             transition: transform 0.2s;
+            /* Layout for Image support */
+            display: flex; gap: 12px; justify-content: space-between; align-items: flex-start;
         }
+        .event-main-content { flex: 1; min-width: 0; }
+        
         .event-card.clickable { cursor: pointer; border-left: 4px solid var(--accent); }
         .event-card.clickable:active { transform: scale(0.98); background: #fafafa; }
         .click-hint { font-size: 11px; color: var(--accent); background: rgba(224, 122, 95, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 8px; font-weight: 500; }
+
+        /* Spot Image Style */
+        .event-img-box {
+            flex-shrink: 0;
+        }
+        .event-spot-img {
+            width: 80px; height: 80px; border-radius: 10px; object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: block;
+            background-color: #eee;
+        }
 
         /* Ticket Card */
         .ticket-card {
@@ -198,10 +212,18 @@
         .todo-item.dragging { opacity: 0.5; background: #f0f0f0; border: 2px dashed var(--primary); }
         .todo-item.checked { opacity: 0.6; background: #fbfbfb; }
         .todo-item.checked .todo-text { text-decoration: line-through; }
-        
+        .todo-item.checked .shop-thumb { filter: grayscale(100%); opacity: 0.5; }
+
         /* Drag Handle */
         .drag-handle { color: #ddd; font-size: 16px; cursor: grab; padding-right: 5px; }
         
+        /* Shop Image Support */
+        .shop-thumb {
+            width: 50px; height: 50px; border-radius: 8px; object-fit: cover;
+            background-color: #f0f0f0; flex-shrink: 0;
+            border: 1px solid #eee;
+        }
+
         .shop-item-content { flex: 1; }
         .shop-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
         .shop-name { font-size: 15px; font-weight: bold; color: var(--text-main); }
@@ -299,7 +321,6 @@
     <div class="list-header">
         <div class="list-tab active" onclick="switchListTab('pre')">出發前</div>
         <div class="list-tab" onclick="switchListTab('shop')">必買清單</div>
-        <div class="list-tab" onclick="switchListTab('food')">必吃美食</div>
     </div>
     <div id="list-content" style="padding-bottom: 80px;"></div>
     
@@ -341,7 +362,6 @@
 </div>
 
 <script>
-    // Optimized Locations Support Multi-points
     const dayLocations = {
         1: [{ name: "北谷町 Chatan", lat: 26.360, lon: 127.804 }],
         2: [{ name: "名護市 Nago", lat: 26.591, lon: 127.977 }],
@@ -354,7 +374,8 @@
         6: [{ name: "那霸市 Naha", lat: 26.212, lon: 127.681 }]
     };
 
-       const itineraryData = {
+    // V7.1 Update: Fixed Image Links (Unsplash & Wikimedia Commons)
+    const itineraryData = {
         1: { date: "1/1 (週四)", events: [
             { time: "13:10", endTime: "16:40", dur: "3.5hr", type: "flight", title: "FD 518", desc: "HKG -> OKA", loc: "那霸機場" },
             { transport: "15mins 接送", icon: "🚐" },
@@ -362,20 +383,26 @@
             { transport: "1hr 駕車至北谷", icon: "🚗" },
             { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort", pdf: "lequ_booking_confirmation.pdf" },
             { transport: "5min 步行", icon: "🚶" },
-            { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村是沖繩最大的美國風情購物區，充滿特色商店、餐廳和Instagram打卡點，適合漫步和拍照。", loc: "美國村" },
+            { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村是沖繩最大的美國風情購物區，充滿特色商店。", loc: "美國村", img: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=400" },
             { time: "21:00", dur: "1.5hr", type: "food", title: "晚餐: 琉球之牛", desc: "北谷店 (已預約)", loc: "琉球之牛 北谷店", reservation_url: "https://www.tablecheck.com/zh-TW/reservations/3NPHLW" },
             { time: "22:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
         ]},
         2: { date: "1/2 (週五)", events: [
             { time: "08:30", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
             { transport: "40min 駕車", icon: "🚗" },
-            { time: "10:30", dur: "45min", type: "spot", title: "萬座毛", desc: "象鼻狀懸崖伸入東中國海，20米高琉球石灰岩絕景，提供壯麗海景和日落觀賞。", loc: "萬座毛" },
+            { time: "10:30", dur: "45min", type: "spot", title: "萬座毛", desc: "象鼻狀懸崖伸入東中國海，20米高琉球石灰岩絕景。", loc: "萬座毛", img: "https://images.unsplash.com/photo-1571408895020-bc781c967672?q=80&w=400" },
             { transport: "30min 駕車", icon: "🚗" },
             { time: "11:45", dur: "15min", type: "food", title: "許田休息站", desc: "道之驛許田：半熟乳酪蛋糕、布丁", loc: "許田休息站" },
             { transport: "40min 駕車", icon: "🚗" },
-            { time: "12:40", dur: "2.5hr", type: "spot", title: "古宇利島 & 午餐", desc: "小島擁有細沙海灘、心形岩石和大橋美景，充滿沖繩亞當夏娃傳說，適合駕車探索和享用蝦蝦飯。", loc: "古宇利島" },
+            { time: "12:40", dur: "2.5hr", type: "food", title: "古宇利島 & 午餐", desc: "小島擁有細沙海灘、心形岩石和大橋美景。(點擊選餐廳)", loc: "古宇利島", hasOptions: true, options: [
+                { name: "KOURI SHRIMP", desc: "蝦蝦飯 ガーリックシュリンプ", rec: "人氣No.1", loc: "Kouri Shrimp" },
+                { name: "しらさ食堂", desc: "海膽丼 ウニ丼", rec: "新鮮海膽", loc: "Shirasa Shokudo" },
+                { name: "Restaurant L LOTA", desc: "島南瓜布丁", rec: "無敵海景", loc: "L Lota" },
+                { name: "Café Fukurubi", desc: "海景咖啡廳", rec: "悠閒午後", loc: "Cafe Fukurubi" },
+                { name: "Yummy kourijima", desc: "甜甜圈", rec: "甜點", loc: "Yummy Kourijima" }
+            ]},
             { transport: "45min 駕車", icon: "🚗" },
-            { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "世界最大級黑潮之海水槽，展示沖繩神秘海洋生物，包括鯨鯊和魔鬼魚（4點後星光票價）。", loc: "美麗海水族館" },
+            { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "世界最大級黑潮之海水槽，展示沖繩神秘海洋生物，包括鯨鯊和魔鬼魚。", loc: "美麗海水族館", img: "https://images.unsplash.com/photo-1582297772274-12964e527d20?q=80&w=400" },
             { transport: "1hr15min 駕車", icon: "🚗" },
             { time: "20:00", dur: "1.5hr", type: "food", title: "晚餐: 北谷町選項", desc: "塔可飯 或 迴轉壽司 (點擊選餐廳)", loc: "美國村", hasOptions: true, options: [
                 { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
@@ -385,7 +412,7 @@
         ]},
         3: { date: "1/3 (週六)", events: [
             { time: "09:00", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
-            { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店、餐廳和Instagram打卡點。", loc: "美國村" },
+            { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店。", loc: "美國村", img: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=400" },
             { transport: "20min 駕車", icon: "🚗" },
             { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: nankuru796", desc: "究極沖繩麵", loc: "沖縄そば ナンクル796" },
             { transport: "20min 駕車", icon: "🚗" },
@@ -399,15 +426,15 @@
         4: { date: "1/4 (週日)", events: [
             { time: "09:00", dur: "1hr", type: "food", title: "早餐: 第一牧志公設市場", desc: "體驗在地魚市場早餐", loc: "第一牧志公設市場" },
             { transport: "20min 駕車", icon: "🚗" },
-            { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "琉球王國古城，融合中日建築，包含達磨寺和首里城公園，體現沖繩歷史文化。", loc: "首里城" },
+            { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "琉球王國古城，融合中日建築，包含達磨寺和首里城公園。", loc: "首里城", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Shuri_Castle_2018.jpg/640px-Shuri_Castle_2018.jpg" },
             { transport: "10min 駕車", icon: "🚗" },
             { time: "11:40", dur: "1.5hr", type: "food", title: "午餐: 古民家食堂", desc: "傳統民房享用炸豬排", loc: "古民家食堂" },
             { transport: "30min 駕車", icon: "🚗" },
-            { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館，體驗傳統文化和太鼓表演。", loc: "沖繩世界" },
+            { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館。", loc: "沖繩世界", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Gyokusendo_Cave_Okinawa_Japan.jpg/640px-Gyokusendo_Cave_Okinawa_Japan.jpg" },
             { transport: "45min 駕車", icon: "🚗" },
             { time: "16:45", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
             { transport: "10min 步行", icon: "🚶" },
-            { time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演。(點擊選餐廳)", loc: "國際通", hasOptions: true, options: [
+            { time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演。", loc: "國際通", hasOptions: true, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Naha_Kokusai_Dori_Street_2019.jpg/640px-Naha_Kokusai_Dori_Street_2019.jpg", options: [
                 { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
                 { name: "Steak House 88", desc: "美式風格老牌牛排館。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
             ]},
@@ -415,7 +442,7 @@
             { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
         ]},
         5: { date: "1/5 (週一)", events: [
-            { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社，俯瞰那霸海灘和海洋，琉球神道聖地，適合參拜和欣賞海景。", loc: "波上宮" },
+            { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社，俯瞰那霸海灘和海洋，琉球神道聖地。", loc: "波上宮", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Naminoue-gu_Honden.jpg/640px-Naminoue-gu_Honden.jpg" },
             { transport: "30min 駕車", icon: "🚗" },
             { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: 暖暮拉麵", desc: "系滿店", loc: "暖暮拉麵 系滿店" },
             { transport: "10min 駕車", icon: "🚗" },
@@ -429,7 +456,7 @@
         6: { date: "1/6 (週二)", events: [
             { time: "10:00", dur: "", type: "hotel", title: "Check-out", desc: "退房準備", loc: "" },
             { transport: "40min 駕車", icon: "🚗" },
-            { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島，提供購物、餐飲和日落觀賞（享用幸福鬆餅）。", loc: "瀨長島" },
+            { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島。", loc: "瀨長島", img: "https://images.unsplash.com/photo-1503756234508-e32369269deb?q=80&w=400" },
             { transport: "25min 駕車", icon: "🚗" },
             { time: "14:45", dur: "25min", type: "transport", title: "還車手續", desc: "OkiBlues 沖繩中文租車", loc: "Oki Blues 中文租車公司" },
             { transport: "20min 接駁至機場", icon: "🚐" },
@@ -446,24 +473,30 @@
         "Miscellaneous (雜項)": ["Umbrella", "Face masks", "Wet tissues", "Tissue paper", "Plastic bags", "Pens", "Comb", "Hair ties", "Sanitary napkins"]
     };
 
+    // V7.1 Fixed: Updated with stable Unsplash Images (Generic representation)
     const defaultShopList = [
-        { name: "Panasonic 吹風機 NA0J", loc: "Bic Camera", price: "約 ¥38,610" },
-        { name: "合利他命 EX Plus (270錠)", loc: "大國藥妝", price: "約 ¥4,980" },
-        { name: "Wakamoto 若元錠 (1000錠)", loc: "大國藥妝", price: "約 ¥1,680" },
-        { name: "DHC 護唇膏", loc: "大國藥妝", price: "約 ¥498" },
-        { name: "邊銀食堂 蒜味辣油", loc: "超市", price: "約 ¥1,000" },
-        { name: "沖繩紅芋塔 (10入)", loc: "御菓子御殿", price: "約 ¥1,080" },
-        { name: "Pokemon Center 限定玩偶", loc: "Aeon Mall Rycom", price: "約 ¥2,200" },
-        { name: "石垣島辣油", loc: "國際通", price: "約 ¥900" }
+        { name: "Yunth VC精華", loc: "藥妝", price: "$230", img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=200" },
+        { name: "Dr. Once塗抹式微針精華", loc: "藥妝", price: "$199", img: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=200" },
+        { name: "Dr. Once Straight Shampoo", loc: "藥妝", price: "$138", img: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=200" },
+        { name: "Capsule Serum Mask (黃/白/橘)", loc: "藥妝", price: "約 $40 (¥770)", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=200" },
+        { name: "Capsule Serum 精華", loc: "藥妝", price: "約 $130 (¥2480)", img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=200" },
+        { name: "The Retino Time 唇部精華液", loc: "藥妝", price: "$95", img: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=200" },
+        { name: "Smile Cosmetique 牙齒美白貼", loc: "藥妝", price: "$135", img: "https://images.unsplash.com/photo-1606811841689-230391b4238a?q=80&w=200" },
+        { name: "Kinbata 美白去漬潔牙粉", loc: "藥妝", price: "$39", img: "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=200" },
+        { name: "Natural White 牙齒美白去漬筆", loc: "藥妝", price: "$125", img: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=200" },
+        { name: "World Life 日本和匠潔牙擦", loc: "藥妝", price: "$49", img: "https://images.unsplash.com/photo-1606811841689-230391b4238a?q=80&w=200" },
+        { name: "plus eau 碎髮理膏", loc: "藥妝", price: "$61", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=200" },
+        { name: "樂敦 Gyutto Corset Hair Mask", loc: "藥妝", price: "$75", img: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=200" },
+        { name: "Cape 睫毛打底膏", loc: "藥妝", price: "$89", img: "https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=200" },
+        { name: "Vitamin C 毛孔橡皮擦", loc: "藥妝", price: "--", img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=200" },
+        { name: "降温晴雨傘 Protect U", loc: "藥妝", price: "--", img: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200" }
     ];
-
-    const foodList = ["沖繩飯糰", "Blue Seal 冰淇淋", "阿古豬火鍋", "塔可飯", "海葡萄", "Orion 啤酒"];
 
     const typeColors = {
         flight: "var(--tag-flight)", food: "var(--tag-food)", spot: "var(--tag-spot)", hotel: "var(--tag-hotel)", shop: "var(--tag-shop)", transport: "var(--tag-transport)", drive: "var(--tag-transport)"
     };
 
-    let todoData = { pre: {}, shop: [], food: [] };
+    let todoData = { pre: {}, shop: [] }; 
     let currentTab = 'pre'; 
     let forecastData = null;
     let weatherTimer = null; 
@@ -482,32 +515,28 @@
         fetchForecast(); 
     }
 
-    // UX: Haptic Feedback
     function triggerHaptic() {
         if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10);
     }
 
     function loadData() {
-        const savedPre = localStorage.getItem('okinawa_pre_v5');
+        const savedPre = localStorage.getItem('okinawa_pre_v7');
         todoData.pre = savedPre ? JSON.parse(savedPre) : defaultPreList;
-        const savedShop = localStorage.getItem('okinawa_shop_v5');
-        todoData.shop = savedShop ? JSON.parse(savedShop) : defaultShopList;
-        const savedFood = localStorage.getItem('okinawa_food_v5');
-        todoData.food = savedFood ? JSON.parse(savedFood) : foodList;
+        // Fix: Use the new image list
+        todoData.shop = defaultShopList; 
     }
 
     function saveData() {
-        localStorage.setItem('okinawa_pre_v5', JSON.stringify(todoData.pre));
-        localStorage.setItem('okinawa_shop_v5', JSON.stringify(todoData.shop));
-        localStorage.setItem('okinawa_food_v5', JSON.stringify(todoData.food));
+        localStorage.setItem('okinawa_pre_v7', JSON.stringify(todoData.pre));
+        localStorage.setItem('okinawa_shop_v7', JSON.stringify(todoData.shop));
     }
 
     function renderList(tab) {
         currentTab = tab;
-        document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop','food'][idx] === tab));
+        document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop'][idx] === tab));
         const container = document.getElementById('list-content');
         const fab = document.getElementById('fab-add');
-        fab.style.display = (tab === 'pre' || tab === 'shop') ? 'flex' : 'none';
+        fab.style.display = 'flex'; 
 
         if (tab === 'pre') {
             let html = '';
@@ -529,28 +558,27 @@
                 const checked = localStorage.getItem('check_' + id) === 'true';
                 return createListItemHtml(id, item, checked, 'shop', null, index);
             }).join('');
-        } else {
-            container.innerHTML = todoData.food.map((item, index) => {
-                const id = `food-${index}`;
-                const checked = localStorage.getItem('check_' + id) === 'true';
-                return `<label class="todo-item ${checked ? 'checked' : ''}">
-                    <input type="checkbox" onchange="toggleCheck(this, '${id}')" ${checked ? 'checked' : ''}>
-                    <span class="todo-text">${item}</span>
-                </label>`;
-            }).join('');
         }
         addDragListeners();
     }
 
     function createListItemHtml(id, item, checked, type, category, index) {
-        let content = (type === 'shop') ? `
+        let content = '';
+        if (type === 'shop') {
+            // Fix: Add referrerpolicy and fallback
+            const imgHtml = item.img ? `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/50x50?text=No+Img'">` : '';
+            content = `
+                ${imgHtml}
                 <div class="shop-item-content">
                     <div class="shop-header">
                         <span class="shop-name">${item.name}</span>
                         <span class="shop-price">${item.price}</span>
                     </div>
                     <span class="shop-loc">📍${item.loc}</span>
-                </div>` : `<span class="todo-text">${item}</span>`;
+                </div>`;
+        } else {
+            content = `<span class="todo-text">${item}</span>`;
+        }
 
         const dataAttrs = type === 'pre' ? `data-type="pre" data-cat="${category}" data-idx="${index}"` : `data-type="shop" data-idx="${index}"`;
         return `<div class="todo-item ${checked ? 'checked' : ''}" draggable="true" ${dataAttrs}>
@@ -586,7 +614,8 @@
         } else if (currentTab === 'shop') {
             content.innerHTML = `<div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 吹風機"></div>
                 <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" placeholder="例如: Bic Camera"></div>
-                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: 20000 yen"></div>`;
+                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: HK$ 200"></div>
+                <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" placeholder="https://..."></div>`;
         }
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('show'), 10);
@@ -601,7 +630,8 @@
         } else if (currentTab === 'shop') {
             const loc = document.getElementById('add-loc').value || "";
             const price = document.getElementById('add-price').value || "";
-            todoData.shop.push({ name, loc, price });
+            const img = document.getElementById('add-img').value || "";
+            todoData.shop.push({ name, loc, price, img });
         }
         saveData();
         renderList(currentTab);
@@ -684,14 +714,27 @@
                 const hasOptions = evt.hasOptions;
                 const clickAttr = hasOptions ? `onclick="openModal(${index})"` : '';
                 const clickClass = hasOptions ? 'clickable' : '';
-                // Core Logic Fix: Map Link Syntax
                 const mapLink = (!hasOptions && evt.loc) ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
                 const pdfLink = evt.pdf ? `<a href="${evt.pdf}" target="_blank" class="pdf-btn">📄 Booking PDF</a>` : '';
                 const reservationLink = evt.reservation_url ? `<a href="${evt.reservation_url}" target="_blank" class="reservation-btn">📅 預約確認</a>` : '';
                 const optionHint = hasOptions ? `<div class="click-hint">👇 點擊選擇餐廳</div>` : '';
+                
+                // Fix: Added referrerpolicy="no-referrer" to Spot images
+                let imgHtml = '';
+                if (evt.type === 'spot' && evt.img) {
+                    imgHtml = `<div class="event-img-box"><img src="${evt.img}" class="event-spot-img" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/80x80?text=Spot'"></div>`;
+                }
+
                 html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}</span><span class="time-dur">${evt.dur}</span></div>
-                        <div class="event-card ${clickClass}" ${clickAttr}><span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
-                        <div class="evt-title">${evt.title}</div><div class="evt-desc">${evt.desc}</div>${optionHint}${reservationLink}${pdfLink}${mapLink}</div></div>`;
+                        <div class="event-card ${clickClass}" ${clickAttr}>
+                            <div class="event-main-content">
+                                <span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
+                                <div class="evt-title">${evt.title}</div>
+                                <div class="evt-desc">${evt.desc}</div>
+                                ${optionHint}${reservationLink}${pdfLink}${mapLink}
+                            </div>
+                            ${imgHtml}
+                        </div></div>`;
             }
         });
         container.innerHTML = html;
@@ -739,7 +782,7 @@
         document.getElementById('page-list').classList.toggle('hidden', page !== 'list');
         document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.id === 'nav-' + page));
         if (page === 'list') {
-            document.getElementById('fab-add').style.display = (currentTab === 'pre' || currentTab === 'shop') ? 'flex' : 'none';
+            document.getElementById('fab-add').style.display = 'flex';
         } else { document.getElementById('fab-add').style.display = 'none'; }
         window.scrollTo(0,0);
     }
@@ -758,7 +801,6 @@
         } catch (e) { document.getElementById('w-loc').innerText = "天氣暫時無法顯示"; }
     }
 
-    // Weather Optimization: Cycle display for multiple locations
     function updateWeatherCard(day) {
         if (!forecastData) return;
         if (weatherTimer) clearInterval(weatherTimer);
@@ -783,7 +825,6 @@
         document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "有雨";
         document.getElementById('w-icon').innerText = weatherIcons[code] || '⛅';
 
-        // Multi-location logic
         const locations = dayLocations[day] || [{ name: "那霸市 Naha" }];
         let locIndex = 0;
 
@@ -807,5 +848,3 @@
 </script>
 </body>
 </html>
-
-
