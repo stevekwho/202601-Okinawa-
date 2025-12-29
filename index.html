@@ -233,6 +233,8 @@
         input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); margin-right: 5px; }
         .todo-text { font-size: 14px; flex: 1; }
         .delete-btn { color: #ff6b6b; font-size: 18px; cursor: pointer; padding: 5px; margin-left: auto; }
+        .edit-btn { color: #4CAF50; font-size: 18px; cursor: pointer; padding: 5px; }
+        .search-btn { color: #4285f4; font-size: 18px; padding: 5px; text-decoration: none; }
 
         .hidden { display: none; }
 
@@ -356,8 +358,15 @@
         </div>
         <div class="modal-body">
             <div id="add-form-content"></div>
-            <button class="btn-primary" onclick="confirmAddItem()">確認新增</button>
+            <button class="btn-primary" onclick="confirmModalAction()">確認</button>
         </div>
+    </div>
+</div>
+
+<div id="image-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('image-modal')">×</span>
+        <img id="full-img" style="max-width:100%;">
     </div>
 </div>
 
@@ -505,6 +514,9 @@
     };
 
     let currentDay = 1;
+    let isEditMode = false;
+    let editIndex = -1;
+    let uploadedImg = null;
 
     function init() {
         loadData();
@@ -522,8 +534,8 @@
     function loadData() {
         const savedPre = localStorage.getItem('okinawa_pre_v7');
         todoData.pre = savedPre ? JSON.parse(savedPre) : defaultPreList;
-        // Fix: Use the new image list
-        todoData.shop = defaultShopList; 
+        const savedShop = localStorage.getItem('okinawa_shop_v7');
+        todoData.shop = savedShop ? JSON.parse(savedShop) : defaultShopList;
     }
 
     function saveData() {
@@ -566,7 +578,7 @@
         let content = '';
         if (type === 'shop') {
             // Fix: Add referrerpolicy and fallback
-            const imgHtml = item.img ? `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/50x50?text=No+Img'">` : '';
+            const imgHtml = item.img ? `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/50x50?text=No+Img'" onclick="viewImage('${item.img}')">` : '';
             content = `
                 ${imgHtml}
                 <div class="shop-item-content">
@@ -575,7 +587,9 @@
                         <span class="shop-price">${item.price}</span>
                     </div>
                     <span class="shop-loc">📍${item.loc}</span>
-                </div>`;
+                </div>
+                <span class="edit-btn" onclick="openAddModal(${index})">✎</span>
+                <a href="https://www.google.com/search?q=${encodeURIComponent(item.name + ' Okinawa')}" target="_blank" class="search-btn">🔍</a>`;
         } else {
             content = `<span class="todo-text">${item}</span>`;
         }
@@ -603,25 +617,64 @@
         triggerHaptic();
     }
 
-    function openAddModal() {
+    function openAddModal(index = -1) {
         triggerHaptic();
+        isEditMode = index !== -1;
+        editIndex = index;
         const modal = document.getElementById('add-modal');
+        const title = document.getElementById('add-modal-title');
+        title.innerText = isEditMode ? '編輯項目' : '新增項目';
         const content = document.getElementById('add-form-content');
+        uploadedImg = null;
         if (currentTab === 'pre') {
             let options = Object.keys(todoData.pre).map(c => `<option value="${c}">${c}</option>`).join('');
             content.innerHTML = `<div class="form-group"><label class="form-label">類別</label><select id="add-cat" class="form-select">${options}</select></div>
                 <div class="form-group"><label class="form-label">項目名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 太陽眼鏡"></div>`;
         } else if (currentTab === 'shop') {
-            content.innerHTML = `<div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 吹風機"></div>
-                <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" placeholder="例如: Bic Camera"></div>
-                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: HK$ 200"></div>
-                <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" placeholder="https://..."></div>`;
+            let name = '', loc = '', price = '', img = '';
+            if (isEditMode) {
+                const item = todoData.shop[editIndex];
+                name = item.name;
+                loc = item.loc;
+                price = item.price;
+                img = item.img;
+            }
+            content.innerHTML = `<div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 吹風機" value="${name}"></div>
+                <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" placeholder="例如: Bic Camera" value="${loc}"></div>
+                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: HK$ 200" value="${price}"></div>
+                <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" placeholder="https://..." value="${img}"></div>
+                <div class="form-group"><label class="form-label">上傳圖片 (選填)</label><input type="file" id="add-file" accept="image/*"></div>`;
+            if (img) {
+                const preview = document.createElement('img');
+                preview.id = 'preview-img';
+                preview.src = img;
+                preview.style = 'max-width:100%; margin-top:10px;';
+                content.appendChild(preview);
+            }
+            document.getElementById('add-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        uploadedImg = ev.target.result;
+                        let preview = document.getElementById('preview-img');
+                        if (!preview) {
+                            preview = document.createElement('img');
+                            preview.id = 'preview-img';
+                            preview.style = 'max-width:100%; margin-top:10px;';
+                            e.target.parentNode.appendChild(preview);
+                        }
+                        preview.src = uploadedImg;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
         }
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
-    function confirmAddItem() {
+    function confirmModalAction() {
         const name = document.getElementById('add-name').value;
         if (!name) return;
         if (currentTab === 'pre') {
@@ -630,13 +683,25 @@
         } else if (currentTab === 'shop') {
             const loc = document.getElementById('add-loc').value || "";
             const price = document.getElementById('add-price').value || "";
-            const img = document.getElementById('add-img').value || "";
-            todoData.shop.push({ name, loc, price, img });
+            let img = document.getElementById('add-img').value || "";
+            if (uploadedImg) img = uploadedImg;
+            if (isEditMode) {
+                todoData.shop[editIndex] = { name, loc, price, img };
+            } else {
+                todoData.shop.push({ name, loc, price, img });
+            }
         }
         saveData();
         renderList(currentTab);
         closeModal('add-modal');
         triggerHaptic();
+    }
+
+    function viewImage(src) {
+        document.getElementById('full-img').src = src;
+        const modal = document.getElementById('image-modal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
     }
 
     function deleteItem(type, cat, index) {
