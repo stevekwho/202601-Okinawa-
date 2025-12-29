@@ -1,850 +1,448 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 V7.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
     <style>
-        :root {
-            --bg-color: #F9F9F7;       
-            --card-bg: #FFFFFF;        
-            --primary: #5B8996;        
-            --accent: #E07A5F;         
-            --text-main: #4A4A4A;      
-            --text-sub: #888888;       
-            --border: #EAEAEA;         
-            
-            --tag-flight: #2C3E50;
-            --tag-transport: #E3F2FD;
-            --tag-food: #FFF3E0;
-            --tag-spot: #E8F5E9;
-            --tag-hotel: #F3E5F5;
-            --tag-shop: #FFF8E1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding-bottom: 80px; 
-            overflow-x: hidden;
-            user-select: none; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        /* Hero Section */
-        .hero-header {
-            position: relative; height: 250px; background-color: #5B8996;
-            overflow: hidden; display: flex; flex-direction: column;
-            justify-content: flex-end; padding: 25px; color: white;
-        }
-        .hero-header::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://images.unsplash.com/photo-1647336963732-7446b9da7a6f?q=80&w=2340');
-            background-size: cover; background-position: center 60%; z-index: 1;
-        }
-        .hero-overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%); z-index: 2;
-        }
-        .hero-content { position: relative; z-index: 3; }
-        .hero-title { font-size: 26px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); letter-spacing: 2px; }
-        .hero-subtitle { font-size: 14px; opacity: 0.9; margin-top: 5px; font-weight: 300; }
-        
-        .countdown-box {
-            position: absolute; top: 20px; right: 20px;
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
-            padding: 10px 15px; border-radius: 12px; text-align: center;
-            border: 1px solid rgba(255,255,255,0.2); z-index: 10;
-        }
-        .countdown-num { font-size: 20px; font-weight: bold; line-height: 1; }
-        .countdown-label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
-
-        .container { max-width: 600px; margin: 0 auto; padding: 0 15px; }
-
-        /* Day Nav */
-        .day-nav-container {
-            position: sticky; top: 0; background: rgba(249, 249, 247, 0.95);
-            backdrop-filter: blur(10px); z-index: 50; padding: 12px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .day-nav { display: flex; overflow-x: auto; padding: 0 15px; gap: 12px; scrollbar-width: none; }
-        .day-nav::-webkit-scrollbar { display: none; }
-        .day-btn {
-            flex: 0 0 auto; min-width: 60px; height: 65px;
-            border-radius: 16px; background: white; border: 1px solid var(--border);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.3s; color: var(--text-sub);
-        }
-        .day-btn.active {
-            background: var(--primary); color: white; border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(91, 137, 150, 0.3); transform: translateY(-2px);
-        }
-        .day-btn span:first-child { font-size: 13px; font-weight: bold; }
-        .day-btn span:last-child { font-size: 10px; opacity: 0.8; }
-
-        /* Weather Card */
-        .weather-card {
-            background: var(--card-bg); border-radius: 16px; padding: 18px 20px;
-            margin: 20px 0; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border);
-            min-height: 90px;
-        }
-        #w-loc { transition: opacity 0.4s ease; }
-
-        /* Timeline */
-        .timeline { position: relative; padding-left: 20px; margin-top: 10px; }
-        .timeline::before {
-            content: ''; position: absolute; top: 15px; bottom: 30px; left: 26px;
-            width: 2px; background: #E8E8E8; z-index: 0;
-        }
-        .event-group { position: relative; margin-bottom: 25px; z-index: 5; display: flex; gap: 15px; }
-        .time-col {
-            flex: 0 0 58px; text-align: right; padding-top: 10px;
-            position: relative; z-index: 10; background: var(--bg-color);
-        }
-        .time-start { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'Roboto', sans-serif; }
-        .time-dur { font-size: 10px; color: var(--text-sub); display: block; margin-top: 2px; }
-
-        .event-card {
-            flex: 1; background: var(--card-bg); border-radius: 16px; padding: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border); position: relative;
-            transition: transform 0.2s;
-            /* Layout for Image support */
-            display: flex; gap: 12px; justify-content: space-between; align-items: flex-start;
-        }
-        .event-main-content { flex: 1; min-width: 0; }
-        
-        .event-card.clickable { cursor: pointer; border-left: 4px solid var(--accent); }
-        .event-card.clickable:active { transform: scale(0.98); background: #fafafa; }
-        .click-hint { font-size: 11px; color: var(--accent); background: rgba(224, 122, 95, 0.1); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 8px; font-weight: 500; }
-
-        /* Spot Image Style */
-        .event-img-box {
-            flex-shrink: 0;
-        }
-        .event-spot-img {
-            width: 80px; height: 80px; border-radius: 10px; object-fit: cover;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: block;
-            background-color: #eee;
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
         }
 
-        /* Ticket Card */
-        .ticket-card {
-            flex: 1; background: var(--tag-flight); color: white;
-            border-radius: 16px; padding: 0; overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
         }
-        .ticket-header {
-            background: rgba(255,255,255,0.1); padding: 8px 15px; font-size: 13px;
-            display: flex; justify-content: space-between; letter-spacing: 1px;
-            border-bottom: 1px dashed rgba(255,255,255,0.2);
-        }
-        .ticket-body { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .ticket-point { text-align: center; }
-        .ticket-time { font-size: 22px; font-weight: bold; font-family: 'Roboto', sans-serif; }
-        .ticket-city { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-        .ticket-arrow { flex: 1; text-align: center; position: relative; padding: 0 10px; }
-        .ticket-arrow::after { content: '✈'; font-size: 16px; }
-        .ticket-footer { padding: 10px 15px; background: white; color: var(--text-main); font-size: 12px; display: flex; align-items: center; gap: 8px; }
 
-        /* Transport Spacer */
-        .transport-spacer { margin: -15px 0 15px 73px; position: relative; padding-left: 15px; }
-        .transport-line {
-            position: absolute; left: -47px; top: 0; bottom: 0; width: 2px;
-            background: repeating-linear-gradient(to bottom, #E8E8E8, #E8E8E8 4px, transparent 4px, transparent 8px);
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        .transport-tag {
-            background: #F0F0F0; color: var(--text-sub); font-size: 11px;
-            padding: 4px 12px; border-radius: 20px; display: inline-flex;
-            align-items: center; gap: 5px; border: 1px solid var(--border);
-        }
-        .event-group::before {
-            content: ''; position: absolute; left: 23px; top: 17px; width: 8px; height: 8px;
-            border-radius: 50%; background: white; border: 2px solid var(--primary); z-index: 2;
-        }
-        .tag { font-size: 10px; padding: 2px 8px; border-radius: 6px; display: inline-block; margin-bottom: 8px; font-weight: 600; }
-        .evt-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; line-height: 1.4; color: var(--text-main); }
-        .evt-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 10px; }
 
-        /* Action Buttons */
-        .map-btn, .pdf-btn, .reservation-btn {
-            display: inline-flex; align-items: center; gap: 4px; font-size: 12px;
-            color: var(--primary); text-decoration: none; background: rgba(91, 137, 150, 0.1);
-            padding: 6px 12px; border-radius: 20px; font-weight: 500; margin-right: 8px; margin-top: 5px;
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
-        .pdf-btn { color: #D32F2F; background: rgba(211, 47, 47, 0.1); }
-        .reservation-btn { color: #E07A5F; background: rgba(224, 122, 95, 0.1); }
-       
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px); border-top: 1px solid rgba(0,0,0,0.08);
-            display: flex; padding: 8px 0 20px 0; 
-            z-index: 1000; height: 75px; 
-        }
-        .nav-item { flex: 1; text-align: center; cursor: pointer; color: #C0C0C0; display: flex; flex-direction: column; justify-content: center; }
-        .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
-        .nav-label { font-size: 12px; font-weight: 500; }
 
-        /* List Styles */
-        .list-header { display: flex; background: #F0F0F0; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
-        .list-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; border-radius: 8px; color: var(--text-sub); cursor: pointer; }
-        .list-tab.active { background: white; color: var(--text-main); font-weight: bold; }
-        
-        .category-section { margin-bottom: 25px; }
-        .category-title { 
-            font-size: 14px; font-weight: bold; color: var(--primary); 
-            margin-bottom: 10px; padding-bottom: 5px; 
-            border-bottom: 2px solid #eee; display: flex; justify-content: space-between;
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        .shopping-list {
+            list-style: none;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .list-item:hover {
+            background: #f0f1f5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-item.completed {
+            opacity: 0.6;
+        }
+
+        .list-item.completed .item-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .item-text {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
         }
-        
-        .todo-item { 
-            background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); 
-            transition: all 0.2s; touch-action: pan-y;
-        }
-        .todo-item.dragging { opacity: 0.5; background: #f0f0f0; border: 2px dashed var(--primary); }
-        .todo-item.checked { opacity: 0.6; background: #fbfbfb; }
-        .todo-item.checked .todo-text { text-decoration: line-through; }
-        .todo-item.checked .shop-thumb { filter: grayscale(100%); opacity: 0.5; }
 
-        /* Drag Handle */
-        .drag-handle { color: #ddd; font-size: 16px; cursor: grab; padding-right: 5px; }
-        
-        /* Shop Image Support */
-        .shop-thumb {
-            width: 50px; height: 50px; border-radius: 8px; object-fit: cover;
-            background-color: #f0f0f0; flex-shrink: 0;
-            border: 1px solid #eee;
+        .edit-btn, .delete-btn, .search-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
-        .shop-item-content { flex: 1; }
-        .shop-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .shop-name { font-size: 15px; font-weight: bold; color: var(--text-main); }
-        .shop-price { font-size: 13px; color: var(--accent); font-weight: bold; }
-        .shop-loc { font-size: 11px; color: var(--text-sub); background: #f0f0f0; padding: 2px 6px; border-radius: 4px; display: inline-block; }
-
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); margin-right: 5px; }
-        .todo-text { font-size: 14px; flex: 1; }
-        .delete-btn { color: #ff6b6b; font-size: 18px; cursor: pointer; padding: 5px; margin-left: auto; }
-
-        .hidden { display: none; }
-
-        /* FAB */
-        .fab-btn {
-            position: fixed; bottom: 90px; right: 20px;
-            width: 56px; height: 56px; border-radius: 50%;
-            background-color: var(--accent); color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 30px; cursor: pointer; z-index: 1001;
-            transition: transform 0.2s;
+        .edit-btn {
+            background: #ffc107;
+            color: white;
         }
-        .fab-btn:active { transform: scale(0.9); }
 
-        /* Modals */
+        .edit-btn:hover {
+            background: #e0a800;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .search-btn {
+            background: #17a2b8;
+            color: white;
+            padding: 8px 10px;
+        }
+
+        .search-btn:hover {
+            background: #138496;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 16px;
+        }
+
+        /* Modal Styles */
         .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
-            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
         }
-        .modal.show { display: flex; opacity: 1; }
-        .modal-content {
-            background-color: #fff; margin: 15px; padding: 20px; border-radius: 20px;
-            width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto;
-            position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-title { font-size: 18px; font-weight: bold; color: var(--primary); }
-        .close-btn { font-size: 28px; cursor: pointer; line-height: 1; }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-label { display: block; margin-bottom: 5px; font-size: 12px; color: #666; font-weight: bold; }
-        .form-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
-        .form-select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: white; box-sizing: border-box; }
-        
-        .btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        .option-item { border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: #fafafa; }
-        .opt-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
-        .opt-desc { font-size: 13px; color: #666; margin-bottom: 8px; line-height: 1.4; }
-        .opt-rec { font-size: 12px; color: var(--primary); background: rgba(91,137,150,0.1); padding: 5px 10px; border-radius: 6px; display: inline-block; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-body input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .modal-body input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .save-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #5568d3;
+        }
+
+        .cancel-btn {
+            background: #ddd;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background: #ccc;
+        }
+
+        .close {
+            color: #999;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #333;
+        }
     </style>
 </head>
 <body>
-
-<div id="page-itinerary">
-    <div class="hero-header">
-        <div class="hero-overlay"></div>
-        <div class="countdown-box">
-            <div id="countdown-num" class="countdown-num">--</div>
-            <div class="countdown-label">DAYS LEFT</div>
-        </div>
-        <div class="hero-content">
-            <h1 class="hero-title">沖縄の旅 2026</h1>
-            <p class="hero-subtitle">1月1日 - 1月6日 • 6日自駕行程</p>
-        </div>
-    </div>
-
-    <div class="day-nav-container">
-        <div class="day-nav" id="day-nav-wrapper"></div>
-    </div>
-
     <div class="container">
-        <div class="weather-card">
-            <div class="w-info">
-                <h3 id="w-loc">讀取天氣中...</h3>
-                <p id="w-desc">--</p>
+        <h1>🛒 Shopping List</h1>
+        <div class="input-group">
+            <input type="text" id="itemInput" placeholder="Add a new item..." />
+            <button onclick="addItem()">Add</button>
+        </div>
+        <ul class="shopping-list" id="shoppingList"></ul>
+        <div class="empty-state" id="emptyState">No items yet. Add one to get started!</div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">Edit Item</div>
+            <div class="modal-body">
+                <input type="text" id="editInput" placeholder="Enter new item name..." />
             </div>
-            <div style="text-align: right; display: flex; align-items: center; gap: 10px;">
-                <div id="w-icon" style="font-size: 30px;">⛅</div>
-                <div>
-                    <div id="w-temp" style="font-size: 24px; font-weight: bold; color: var(--primary);">--°</div>
-                    <div style="font-size: 12px; color: var(--accent);">☔ <span id="w-rain">--%</span></div>
-                </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <button class="save-btn" onclick="saveEdit()">Save</button>
             </div>
         </div>
-
-        <div id="itinerary-content" class="timeline"></div>
     </div>
-</div>
 
-<div id="page-list" class="container hidden" style="padding-top: 20px;">
-    <div class="list-header">
-        <div class="list-tab active" onclick="switchListTab('pre')">出發前</div>
-        <div class="list-tab" onclick="switchListTab('shop')">必買清單</div>
-    </div>
-    <div id="list-content" style="padding-bottom: 80px;"></div>
-    
-    <div id="fab-add" class="fab-btn" onclick="openAddModal()">+</div>
-</div>
+    <script>
+        let items = [];
+        let editingIndex = -1;
 
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchPage('itinerary')" id="nav-itinerary">
-        <span class="nav-icon">🗺️</span>
-        <span class="nav-label">行程</span>
-    </div>
-    <div class="nav-item" onclick="switchPage('list')" id="nav-list">
-        <span class="nav-icon">📋</span>
-        <span class="nav-label">清單</span>
-    </div>
-</nav>
-
-<div id="option-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title" id="modal-title">餐廳選項</div>
-            <span class="close-btn" onclick="closeModal('option-modal')">×</span>
-        </div>
-        <div class="modal-body" id="modal-body"></div>
-    </div>
-</div>
-
-<div id="add-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title" id="add-modal-title">新增項目</div>
-            <span class="close-btn" onclick="closeModal('add-modal')">×</span>
-        </div>
-        <div class="modal-body">
-            <div id="add-form-content"></div>
-            <button class="btn-primary" onclick="confirmAddItem()">確認新增</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    const dayLocations = {
-        1: [{ name: "北谷町 Chatan", lat: 26.360, lon: 127.804 }],
-        2: [{ name: "名護市 Nago", lat: 26.591, lon: 127.977 }],
-        3: [
-            { name: "北谷町 (日) Chatan", lat: 26.360, lon: 127.804 },
-            { name: "那霸市 (夜) Naha", lat: 26.212, lon: 127.681 }
-        ],
-        4: [{ name: "那霸市 Naha", lat: 26.212, lon: 127.681 }],
-        5: [{ name: "那霸市 Naha", lat: 26.212, lon: 127.681 }],
-        6: [{ name: "那霸市 Naha", lat: 26.212, lon: 127.681 }]
-    };
-
-    // V7.1 Update: Fixed Image Links (Unsplash & Wikimedia Commons)
-    const itineraryData = {
-        1: { date: "1/1 (週四)", events: [
-            { time: "13:10", endTime: "16:40", dur: "3.5hr", type: "flight", title: "FD 518", desc: "HKG -> OKA", loc: "那霸機場" },
-            { transport: "15mins 接送", icon: "🚐" },
-            { time: "17:30", dur: "30min", type: "transport", title: "取車", desc: "OkiBlues 中文租車公司", loc: "Oki Blues 中文租車公司" },
-            { transport: "1hr 駕車至北谷", icon: "🚗" },
-            { time: "19:00", dur: "30min", type: "hotel", title: "酒店 Check-in", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "LeQu Okinawa Chatan Spa & Resort", pdf: "lequ_booking_confirmation.pdf" },
-            { transport: "5min 步行", icon: "🚶" },
-            { time: "19:30", dur: "1.5hr", type: "spot", title: "北谷町觀光", desc: "美國村是沖繩最大的美國風情購物區，充滿特色商店。", loc: "美國村", img: "https://c8.alamy.com/comp/W4CCK0/american-village-japan-september-17-2018-shop-mall-of-the-american-village-of-chatan-city-in-okinawa-island-W4CCK0.jpg" },
-            { time: "21:00", dur: "1.5hr", type: "food", title: "晚餐: 琉球之牛", desc: "北谷店 (已預約)", loc: "琉球之牛 北谷店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/e0/c4/74/caption.jpg?w=900&h=500&s=1", reservation_url: "https://www.tablecheck.com/zh-TW/reservations/3NPHLW" },
-            { time: "22:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
-        ]},
-        2: { date: "1/2 (週五)", events: [
-            { time: "08:30", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
-            { transport: "40min 駕車", icon: "🚗" },
-            { time: "10:30", dur: "45min", type: "spot", title: "萬座毛", desc: "象鼻狀懸崖伸入東中國海，20米高琉球石灰岩絕景。", loc: "萬座毛", img: "https://upload.wikimedia.org/wikipedia/commons/5/53/Onna_Okinawa_Japan_Japan_Cape-Manzamo-01.jpg" },
-            { transport: "30min 駕車", icon: "🚗" },
-            { time: "11:45", dur: "15min", type: "food", title: "許田休息站", desc: "道之驛許田：半熟乳酪蛋糕、布丁", loc: "許田休息站", img: "https://static.gltjp.com/glt/data/directory/14000/13729/20220928_175216_1c4a461e_w1920.webp" },
-            { transport: "40min 駕車", icon: "🚗" },
-            { time: "12:40", dur: "2.5hr", type: "food", title: "古宇利島 & 午餐", desc: "小島擁有細沙海灘、心形岩石和大橋美景。(點擊選餐廳)", loc: "古宇利島", img: "https://visitokinawajapan.com/wp-content/uploads/2024/02/de33_kv_kouri-island-beach-scenery.webp", hasOptions: true, options: [
-                { name: "KOURI SHRIMP", desc: "蝦蝦飯 ガーリックシュリンプ", rec: "人氣No.1", loc: "Kouri Shrimp" },
-                { name: "しらさ食堂", desc: "海膽丼 ウニ丼", rec: "新鮮海膽", loc: "Shirasa Shokudo" },
-                { name: "Restaurant L LOTA", desc: "島南瓜布丁", rec: "無敵海景", loc: "L Lota" },
-                { name: "Café Fukurubi", desc: "海景咖啡廳", rec: "悠閒午後", loc: "Cafe Fukurubi" },
-                { name: "Yummy kourijima", desc: "甜甜圈", rec: "甜點", loc: "Yummy Kourijima" }
-            ]},
-            { transport: "45min 駕車", icon: "🚗" },
-            { time: "16:00", dur: "2.5hr", type: "spot", title: "美麗海水族館", desc: "世界最大級黑潮之海水槽，展示沖繩神秘海洋生物，包括鯨鯊和魔鬼魚。", loc: "美麗海水族館", img: "https://www.japan-guide.com/g17/7109_top.jpg" },
-            { transport: "1hr15min 駕車", icon: "🚗" },
-            { time: "20:00", dur: "1.5hr", type: "food", title: "晚餐: 北谷町選項", desc: "塔可飯 或 迴轉壽司 (點擊選餐廳)", loc: "美國村", img: "https://c8.alamy.com/comp/W4CCK0/american-village-japan-september-17-2018-shop-mall-of-the-american-village-of-chatan-city-in-okinawa-island-W4CCK0.jpg", hasOptions: true, options: [
-                { name: "Taco Rice Cafe Kijimuna", desc: "美國村必吃！歐姆蛋塔可飯始祖，味道濃郁。", rec: "推介：歐姆蛋Taco Rice", loc: "Taco Rice Cafe Kijimuna Depot Island" },
-                { name: "グルメ迴轉壽司市場", desc: "人氣排隊名店，食材新鮮，CP值高。", rec: "推介：鮭魚、鮪魚腹肉", loc: "グルメ回転寿司市場 美浜店" }
-            ]},
-            { time: "21:30", dur: "", type: "hotel", title: "返回酒店", desc: "LeQu Okinawa Chatan Spa & Resort", loc: "" }
-        ]},
-        3: { date: "1/3 (週六)", events: [
-            { time: "09:00", dur: "1hr", type: "food", title: "酒店早餐", desc: "", loc: "" },
-            { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店。", loc: "美國村", img: "https://c8.alamy.com/comp/W4CCK0/american-village-japan-september-17-2018-shop-mall-of-the-american-village-of-chatan-city-in-okinawa-island-W4CCK0.jpg" },
-            { transport: "20min 駕車", icon: "🚗" },
-            { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: nankuru796", desc: "究極沖繩麵", loc: "沖縄そば ナンクル796", img: "https://files.kozaweb.jp/prd_uploads/files/2023/07/HnrJISZolsfAkfmEuViulhA9MO87xd699oIHdv0Z.jpeg" },
-            { transport: "20min 駕車", icon: "🚗" },
-            { time: "13:15", dur: "5.5hr", type: "shop", title: "Aeon Mall Rycom", desc: "沖繩最大購物中心 & Pokemon Store", loc: "Aeon Mall Okinawa Rycom", img: "https://resources.matcha-jp.com/resize/720x2000/2023/10/02-147649.webp" },
-            { transport: "45min 駕車", icon: "🚗" },
-            { time: "19:30", dur: "15min", type: "hotel", title: "酒店 Check-in", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha", pdf: "lagent_booking_confirmation.pdf" },
-            { transport: "10min 步行", icon: "🚶" },
-            { time: "20:00", dur: "1.5hr", type: "food", title: "晚餐:食彩酒房", desc: "沖繩必吃阿古豬涮涮鍋", loc: "食彩酒房", img: "https://tblg.k-img.com/resize/640x360c/restaurant/images/Rvw/147386/147386517.jpg?token=84dbdfd&api=v2", pdf: "Visa 食彩酒房 booking.pdf" },
-            { time: "21:40", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
-        ]},
-        4: { date: "1/4 (週日)", events: [
-            { time: "09:00", dur: "1hr", type: "food", title: "早餐: 第一牧志公設市場", desc: "體驗在地魚市場早餐", loc: "第一牧志公設市場", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/b2/d2/08/caption.jpg?w=1200&h=-1&s=1" },
-            { transport: "20min 駕車", icon: "🚗" },
-            { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "琉球王國古城，融合中日建築，包含達磨寺和首里城公園。", loc: "首里城", img: "https://upload.wikimedia.org/wikipedia/commons/5/56/Naha_Okinawa_Japan_Shuri-Castle-01.jpg" },
-            { transport: "10min 駕車", icon: "🚗" },
-            { time: "11:40", dur: "1.5hr", type: "food", title: "午餐: 古民家食堂", desc: "傳統民房享用炸豬排", loc: "古民家食堂", img: "https://www.oki-islandguide.com/wp-content/uploads/2018/05/b8147b9ad0f338bf7a0bceb3888a2ba6.jpg" },
-            { transport: "30min 駕車", icon: "🚗" },
-            { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館。", loc: "沖繩世界", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Gyokusendo_Nanjo_Okinawa_Japan17s3104.jpg" },
-            { transport: "45min 駕車", icon: "🚗" },
-            { time: "16:45", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-            { transport: "10min 步行", icon: "🚶" },
-            { time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演。", loc: "國際通", hasOptions: true, img: "https://cdn.gaijinpot.com/app/uploads/sites/6/2016/06/Okinawa-International-Street-.jpg", options: [
-                { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
-                { name: "Steak House 88", desc: "美式風格老牌牛排館。", rec: "推介：丁骨牛排", loc: "Steak House 88 國際通店" }
-            ]},
-            { transport: "10min 步行", icon: "🚶" },
-            { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: ""}
-        ]},
-        5: { date: "1/5 (週一)", events: [
-            { time: "10:15", dur: "45min", type: "spot", title: "波上宮", desc: "懸崖上的神社，俯瞰那霸海灘和海洋，琉球神道聖地。", loc: "波上宮", img: "https://upload.wikimedia.org/wikipedia/commons/4/42/The_distant_view_of_Naminoueg%C5%AB_Honden.jpg" },
-            { transport: "30min 駕車", icon: "🚗" },
-            { time: "11:30", dur: "1.5hr", type: "food", title: "午餐: 暖暮拉麵", desc: "系滿店", loc: "暖暮拉麵 系滿店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2f/f9/26/e8/caption.jpg?w=900&h=500&s=1" },
-            { transport: "10min 駕車", icon: "🚗" },
-            { time: "13:10", dur: "5hr", type: "shop", title: "Ashibinaa Outlet", desc: "品牌折扣購物中心", loc: "Ashibinaa Outlet", img: "https://static.gltjp.com/glt/data/directory/15000/14433/20241101_175433_0fdb1447_w1920.webp" },
-            { transport: "40min 駕車", icon: "🚗" },
-            { time: "18:55", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
-            { transport: "5min 步行", icon: "🚶" },
-            { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那霸久茂地店 厚切牛舌", loc: "燒肉ここから 那霸久茂地店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/b4/68/44/getlstd-property-photo.jpg?w=800&h=400&s=1" },
-            { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
-        ]},
-        6: { date: "1/6 (週二)", events: [
-            { time: "10:00", dur: "", type: "hotel", title: "Check-out", desc: "退房準備", loc: "" },
-            { transport: "40min 駕車", icon: "🚗" },
-            { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島。", loc: "瀨長島", img: "https://visitokinawajapan.com/wp-content/uploads/2024/02/de36_kv_senaga-island-umikaji-terrace.webp" },
-            { transport: "25min 駕車", icon: "🚗" },
-            { time: "14:45", dur: "25min", type: "transport", title: "還車手續", desc: "OkiBlues 沖繩中文租車", loc: "Oki Blues 中文租車公司" },
-            { transport: "20min 接駁至機場", icon: "🚐" },
-            { time: "17:40", endTime: "19:25", dur: "2.5hr", type: "flight", title: "FD 519", desc: "OKA -> HKG", loc: "那霸機場" }
-        ]}
-    };
-
-    const defaultPreList = {
-        "Documents & Money (證件與金錢)": ["Passport (HK)", "Passport BNO", "HKID", "Cash", "Credit card", "Hotel booking confirmation", "Flight tickets", "Travel insurance"],
-        "Electronics (電子產品)": ["SIM card", "Power bank", "Charging cables", "Power plug", "Travel adaptor"],
-        "Clothing (衣物)": ["Clothes", "Underwear", "Socks", "Sneakers", "Pajamas", "Bags", "Sunglasses", "Contact lenses"],
-        "Toiletries (個人護理)": ["Toothpaste", "Toothbrush", "Shower gel", "Conditioner", "Face wash", "Body lotion", "Hand cream", "Eye drops"],
-        "Skincare & Cosmetics (護膚化妝)": ["Skincare products", "Makeup remover", "Face masks", "Sunscreen", "Perfume", "Cotton pads", "Accessories"],
-        "Miscellaneous (雜項)": ["Umbrella", "Face masks", "Wet tissues", "Tissue paper", "Plastic bags", "Pens", "Comb", "Hair ties", "Sanitary napkins"]
-    };
-
-    // V7.1 Fixed: Updated with stable Unsplash Images (Generic representation)
-    const defaultShopList = [
-        { name: "Yunth VC精華", loc: "藥妝", price: "$230", img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=200" },
-        { name: "Dr. Once塗抹式微針精華", loc: "藥妝", price: "$199", img: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=200" },
-        { name: "Dr. Once Straight Shampoo", loc: "藥妝", price: "$138", img: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=200" },
-        { name: "Capsule Serum Mask (黃/白/橘)", loc: "藥妝", price: "約 $40 (¥770)", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=200" },
-        { name: "Capsule Serum 精華", loc: "藥妝", price: "約 $130 (¥2480)", img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=200" },
-        { name: "The Retino Time 唇部精華液", loc: "藥妝", price: "$95", img: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=200" },
-        { name: "Smile Cosmetique 牙齒美白貼", loc: "藥妝", price: "$135", img: "https://images.unsplash.com/photo-1606811841689-230391b4238a?q=80&w=200" },
-        { name: "Kinbata 美白去漬潔牙粉", loc: "藥妝", price: "$39", img: "https://images.unsplash.com/photo-1563453392212-326f5e854473?q=80&w=200" },
-        { name: "Natural White 牙齒美白去漬筆", loc: "藥妝", price: "$125", img: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=200" },
-        { name: "World Life 日本和匠潔牙擦", loc: "藥妝", price: "$49", img: "https://images.unsplash.com/photo-1606811841689-230391b4238a?q=80&w=200" },
-        { name: "plus eau 碎髮理膏", loc: "藥妝", price: "$61", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=200" },
-        { name: "楽敦 Gyutto Corset Hair Mask", loc: "藥妝", price: "$75", img: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=200" },
-        { name: "Cape 睫毛打底膏", loc: "藥妝", price: "$89", img: "https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=200" },
-        { name: "Vitamin C 毛孔橡皮擦", loc: "藥妝", price: "--", img: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=200" },
-        { name: "降温晴雨傘 Protect U", loc: "藥妝", price: "--", img: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200" }
-    ];
-
-    const typeColors = {
-        flight: "var(--tag-flight)", food: "var(--tag-food)", spot: "var(--tag-spot)", hotel: "var(--tag-hotel)", shop: "var(--tag-shop)", transport: "var(--tag-transport)", drive: "var(--tag-transport)"
-    };
-
-    let todoData = { pre: {}, shop: [] }; 
-    let currentTab = 'pre'; 
-    let forecastData = null;
-    let weatherTimer = null; 
-    const weatherIcons = {
-        0: '☀️', 1: '☀️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌧️', 53: '🌧️', 55: '🌧️', 61: '🌦️', 63: '🌧️', 65: '🌧️🌧️', 80: '🌧️', 81: '⛈️', 82: '⛈️⛈️', 95: '⛈️', 96: '⛈️⚡', 99: '🌪️'
-    };
-
-    let currentDay = 1;
-
-    function init() {
-        loadData();
-        renderDayNav();
-        renderItinerary(1);
-        renderList('pre');
-        updateCountdown();
-        fetchForecast(); 
-    }
-
-    function triggerHaptic() {
-        if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10);
-    }
-
-    function loadData() {
-        const savedPre = localStorage.getItem('okinawa_pre_v7');
-        todoData.pre = savedPre ? JSON.parse(savedPre) : defaultPreList;
-        // Fix: Use the new image list
-        todoData.shop = defaultShopList; 
-    }
-
-    function saveData() {
-        localStorage.setItem('okinawa_pre_v7', JSON.stringify(todoData.pre));
-        localStorage.setItem('okinawa_shop_v7', JSON.stringify(todoData.shop));
-    }
-
-    function renderList(tab) {
-        currentTab = tab;
-        document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop'][idx] === tab));
-        const container = document.getElementById('list-content');
-        const fab = document.getElementById('fab-add');
-        fab.style.display = 'flex'; 
-
-        if (tab === 'pre') {
-            let html = '';
-            for (const [category, items] of Object.entries(todoData.pre)) {
-                html += `<div class="category-section">
-                    <div class="category-title" onclick="toggleCategory(this)">${category} <span>▼</span></div>
-                    <div class="category-items">`;
-                items.forEach((item, index) => {
-                    const id = `pre-${category}-${index}`;
-                    const checked = localStorage.getItem('check_' + id) === 'true';
-                    html += createListItemHtml(id, item, checked, 'pre', category, index);
-                });
-                html += `</div></div>`;
+        // Load items from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('shoppingItems');
+            if (saved) {
+                items = JSON.parse(saved);
+                renderList();
             }
-            container.innerHTML = html;
-        } else if (tab === 'shop') {
-            container.innerHTML = todoData.shop.map((item, index) => {
-                const id = `shop-${index}`;
-                const checked = localStorage.getItem('check_' + id) === 'true';
-                return createListItemHtml(id, item, checked, 'shop', null, index);
-            }).join('');
-        }
-        addDragListeners();
-    }
+        });
 
-    function createListItemHtml(id, item, checked, type, category, index) {
-        let content = '';
-        if (type === 'shop') {
-            // Fix: Add referrerpolicy and fallback
-            const imgHtml = item.img ? `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/50x50?text=No+Img'">` : '';
-            content = `
-                ${imgHtml}
-                <div class="shop-item-content">
-                    <div class="shop-header">
-                        <span class="shop-name">${item.name}</span>
-                        <span class="shop-price">${item.price}</span>
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const itemText = input.value.trim();
+
+            if (itemText === '') {
+                alert('Please enter an item!');
+                return;
+            }
+
+            items.push({
+                text: itemText,
+                completed: false
+            });
+
+            input.value = '';
+            saveToLocalStorage();
+            renderList();
+        }
+
+        function deleteItem(index) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                items.splice(index, 1);
+                saveToLocalStorage();
+                renderList();
+            }
+        }
+
+        function toggleComplete(index) {
+            items[index].completed = !items[index].completed;
+            saveToLocalStorage();
+            renderList();
+        }
+
+        function openEditModal(index) {
+            editingIndex = index;
+            const editInput = document.getElementById('editInput');
+            editInput.value = items[index].text;
+            document.getElementById('editModal').style.display = 'block';
+            editInput.focus();
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingIndex = -1;
+        }
+
+        function saveEdit() {
+            const editInput = document.getElementById('editInput');
+            const newText = editInput.value.trim();
+
+            if (newText === '') {
+                alert('Item name cannot be empty!');
+                return;
+            }
+
+            items[editingIndex].text = newText;
+            saveToLocalStorage();
+            renderList();
+            closeModal();
+        }
+
+        function searchGoogle(itemText) {
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(itemText)}`;
+            window.open(searchUrl, '_blank');
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('shoppingItems', JSON.stringify(items));
+        }
+
+        function renderList() {
+            const listContainer = document.getElementById('shoppingList');
+            const emptyState = document.getElementById('emptyState');
+
+            listContainer.innerHTML = '';
+
+            if (items.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = `list-item ${item.completed ? 'completed' : ''}`;
+
+                li.innerHTML = `
+                    <input type="checkbox" class="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleComplete(${index})" />
+                    <span class="item-text">${escapeHtml(item.text)}</span>
+                    <div class="item-actions">
+                        <button class="search-btn" onclick="searchGoogle('${escapeHtml(item.text).replace(/'/g, "\\'")}')">🔍 Search</button>
+                        <button class="edit-btn" onclick="openEditModal(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteItem(${index})">Delete</button>
                     </div>
-                    <span class="shop-loc">📍${item.loc}</span>
-                </div>`;
-        } else {
-            content = `<span class="todo-text">${item}</span>`;
+                `;
+
+                listContainer.appendChild(li);
+            });
         }
 
-        const dataAttrs = type === 'pre' ? `data-type="pre" data-cat="${category}" data-idx="${index}"` : `data-type="shop" data-idx="${index}"`;
-        return `<div class="todo-item ${checked ? 'checked' : ''}" draggable="true" ${dataAttrs}>
-                <span class="drag-handle">☰</span>
-                <input type="checkbox" onchange="toggleCheck(this, '${id}')" ${checked ? 'checked' : ''}>
-                ${content}
-                <span class="delete-btn" onclick="deleteItem('${type}', '${category}', ${index})">×</span>
-            </div>`;
-    }
-
-    function toggleCategory(el) {
-        const items = el.nextElementSibling;
-        const isHidden = items.style.display === 'none';
-        items.style.display = isHidden ? 'block' : 'none';
-        el.querySelector('span').innerText = isHidden ? '▼' : '▶';
-    }
-
-    function toggleCheck(cb, id) {
-        const row = cb.closest('.todo-item');
-        row.classList.toggle('checked', cb.checked);
-        localStorage.setItem('check_' + id, cb.checked);
-        triggerHaptic();
-    }
-
-    function openAddModal() {
-        triggerHaptic();
-        const modal = document.getElementById('add-modal');
-        const content = document.getElementById('add-form-content');
-        if (currentTab === 'pre') {
-            let options = Object.keys(todoData.pre).map(c => `<option value="${c}">${c}</option>`).join('');
-            content.innerHTML = `<div class="form-group"><label class="form-label">類別</label><select id="add-cat" class="form-select">${options}</select></div>
-                <div class="form-group"><label class="form-label">項目名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 太陽眼鏡"></div>`;
-        } else if (currentTab === 'shop') {
-            content.innerHTML = `<div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 吹風機"></div>
-                <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" placeholder="例如: Bic Camera"></div>
-                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: HK$ 200"></div>
-                <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" placeholder="https://..."></div>`;
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
-        modal.style.display = 'flex';
-        setTimeout(() => modal.classList.add('show'), 10);
-    }
 
-    function confirmAddItem() {
-        const name = document.getElementById('add-name').value;
-        if (!name) return;
-        if (currentTab === 'pre') {
-            const cat = document.getElementById('add-cat').value;
-            todoData.pre[cat].push(name);
-        } else if (currentTab === 'shop') {
-            const loc = document.getElementById('add-loc').value || "";
-            const price = document.getElementById('add-price').value || "";
-            const img = document.getElementById('add-img').value || "";
-            todoData.shop.push({ name, loc, price, img });
-        }
-        saveData();
-        renderList(currentTab);
-        closeModal('add-modal');
-        triggerHaptic();
-    }
+        // Allow adding item by pressing Enter
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('itemInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addItem();
+            });
 
-    function deleteItem(type, cat, index) {
-        if (!confirm("確定要刪除此項目嗎？")) return;
-        if (type === 'pre') { todoData.pre[cat].splice(index, 1); } 
-        else { todoData.shop.splice(index, 1); }
-        saveData();
-        renderList(currentTab);
-    }
-
-    let dragSrcEl = null;
-    function addDragListeners() {
-        const items = document.querySelectorAll('.todo-item');
-        items.forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('drop', handleDrop);
-            item.addEventListener('dragend', handleDragEnd);
+            // Allow saving edit by pressing Enter
+            document.getElementById('editInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') saveEdit();
+            });
         });
-    }
-    function handleDragStart(e) { dragSrcEl = this; e.dataTransfer.effectAllowed = 'move'; this.classList.add('dragging'); }
-    function handleDragOver(e) { if (e.preventDefault) e.preventDefault(); e.dataTransfer.dropEffect = 'move'; return false; }
-    function handleDrop(e) {
-        if (e.stopPropagation) e.stopPropagation();
-        const target = this.closest('.todo-item');
-        if (dragSrcEl !== target) {
-            const srcType = dragSrcEl.dataset.type, destType = target.dataset.type;
-            if (srcType === destType && srcType === 'shop') {
-                const srcIdx = parseInt(dragSrcEl.dataset.idx), destIdx = parseInt(target.dataset.idx);
-                const temp = todoData.shop[srcIdx];
-                todoData.shop[srcIdx] = todoData.shop[destIdx];
-                todoData.shop[destIdx] = temp;
-                saveData(); renderList('shop');
-            } else if (srcType === destType && srcType === 'pre') {
-                const srcCat = dragSrcEl.dataset.cat, destCat = target.dataset.cat;
-                if (srcCat === destCat) {
-                    const srcIdx = parseInt(dragSrcEl.dataset.idx), destIdx = parseInt(target.dataset.idx);
-                    const arr = todoData.pre[srcCat];
-                    const temp = arr[srcIdx];
-                    arr[srcIdx] = arr[destIdx];
-                    arr[destIdx] = temp;
-                    saveData(); renderList('pre');
-                }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
             }
-        }
-        return false;
-    }
-    function handleDragEnd() { this.classList.remove('dragging'); }
-
-    function renderDayNav() {
-        const wrapper = document.getElementById('day-nav-wrapper');
-        let html = '';
-        Object.keys(itineraryData).forEach(day => {
-            html += `<div class="day-btn ${day == 1 ? 'active' : ''}" onclick="switchDay(${day})"><span>Day ${day}</span><span>${itineraryData[day].date.split(' ')[0]}</span></div>`;
-        });
-        wrapper.innerHTML = html;
-    }
-
-    function renderItinerary(day) {
-        currentDay = day;
-        document.querySelectorAll('.day-btn').forEach((btn, idx) => btn.classList.toggle('active', (idx + 1) == day));
-        const container = document.getElementById('itinerary-content');
-        let html = '';
-        itineraryData[day].events.forEach((evt, index) => {
-            if (evt.transport) {
-                html += `<div class="transport-spacer"><div class="transport-line"></div><div class="transport-tag">${evt.icon} ${evt.transport}</div></div>`;
-            } else if (evt.type === 'flight') {
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}</span><span class="time-dur">${evt.dur}</span></div>
-                        <div class="ticket-card"><div class="ticket-header"><div style="display: flex; align-items: center; gap: 8px;">
-                        <img src="https://1000logos.net/wp-content/uploads/2020/04/AirAsia-Logo-2012.png" alt="AirAsia" style="height: 20px;"><span>Thai AirAsia</span></div><span>${evt.title}</span></div>
-                        <div class="ticket-body"><div class="ticket-point"><div class="ticket-time">${evt.time}</div><div class="ticket-city">${evt.desc.split(' -> ')[0]}</div></div>
-                        <div class="ticket-arrow"></div><div class="ticket-point"><div class="ticket-time">${evt.endTime}</div><div class="ticket-city">${evt.desc.split(' -> ')[1]}</div></div></div>
-                        <div class="ticket-footer">📍 那霸機場 (OKA)</div></div></div>`;
-            } else {
-                const hasOptions = evt.hasOptions;
-                const clickAttr = hasOptions ? `onclick="openModal(${index})"` : '';
-                const clickClass = hasOptions ? 'clickable' : '';
-                const mapLink = (!hasOptions && evt.loc) ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(evt.loc)}" target="_blank" class="map-btn">📍 Google Map</a>` : '';
-                const pdfLink = evt.pdf ? `<a href="${evt.pdf}" target="_blank" class="pdf-btn">📄 Booking PDF</a>` : '';
-                const reservationLink = evt.reservation_url ? `<a href="${evt.reservation_url}" target="_blank" class="reservation-btn">📅 預約確認</a>` : '';
-                const optionHint = hasOptions ? `<div class="click-hint">👇 點擊選擇餐廳</div>` : '';
-                
-                // Fix: Added referrerpolicy="no-referrer" to Spot images
-                let imgHtml = '';
-                if (evt.img) {
-                    imgHtml = `<div class="event-img-box"><img src="${evt.img}" class="event-spot-img" loading="lazy" onerror="this.src='https://placehold.co/80x80?text=Spot'"></div>`;
-                }
-
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}</span><span class="time-dur">${evt.dur}</span></div>
-                        <div class="event-card ${clickClass}" ${clickAttr}>
-                            <div class="event-main-content">
-                                <span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
-                                <div class="evt-title">${evt.title}</div>
-                                <div class="evt-desc">${evt.desc}</div>
-                                ${optionHint}${reservationLink}${pdfLink}${mapLink}
-                            </div>
-                            ${imgHtml}
-                        </div></div>`;
-            }
-        });
-        container.innerHTML = html;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        updateWeatherCard(day);
-    }
-
-    function openModal(eventIndex) {
-        triggerHaptic();
-        const evt = itineraryData[currentDay].events[eventIndex];
-        if (!evt.hasOptions) return;
-        document.getElementById('modal-title').innerText = evt.title;
-        const body = document.getElementById('modal-body');
-        let html = '';
-        evt.options.forEach(opt => {
-            html += `<div class="option-item"><div class="opt-name">${opt.name}
-                    ${opt.loc ? `<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(opt.loc)}" target="_blank" style="text-decoration:none">🗺️</a>` : ''}</div>
-                    <div class="opt-desc">${opt.desc}</div>${opt.rec ? `<div class="opt-rec">💡 ${opt.rec}</div>` : ''}</div>`;
-        });
-        body.innerHTML = html;
-        const modal = document.getElementById('option-modal');
-        modal.style.display = "flex";
-        setTimeout(() => modal.classList.add('show'), 10);
-    }
-
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('show');
-        setTimeout(() => modal.style.display = "none", 300);
-    }
-
-    function getTagLabel(title, type) {
-        if (title.includes("午餐")) return "午餐";
-        if (title.includes("晚餐")) return "晚餐";
-        if (title.includes("早餐")) return "早餐";
-        const map = { flight: "航班", transport: "交通", drive: "駕車", food: "美食", spot: "景點", hotel: "住宿", shop: "購物" };
-        return map[type] || "其他";
-    }
-
-    function switchDay(day) { triggerHaptic(); renderItinerary(day); }
-    function switchListTab(tab) { triggerHaptic(); renderList(tab); }
-    function switchPage(page) {
-        triggerHaptic();
-        document.getElementById('page-itinerary').classList.toggle('hidden', page !== 'itinerary');
-        document.getElementById('page-list').classList.toggle('hidden', page !== 'list');
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.id === 'nav-' + page));
-        if (page === 'list') {
-            document.getElementById('fab-add').style.display = 'flex';
-        } else { document.getElementById('fab-add').style.display = 'none'; }
-        window.scrollTo(0,0);
-    }
-
-    function updateCountdown() {
-        const diff = new Date("2026-01-01T00:00:00") - new Date();
-        document.getElementById('countdown-num').innerText = Math.max(0, Math.ceil(diff / 86400000));
-    }
-    
-    async function fetchForecast() {
-        try {
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14');
-            const data = await res.json();
-            forecastData = data.daily;
-            updateWeatherCard(1);
-        } catch (e) { document.getElementById('w-loc').innerText = "天氣暫時無法顯示"; }
-    }
-
-    function updateWeatherCard(day) {
-        if (!forecastData) return;
-        if (weatherTimer) clearInterval(weatherTimer);
-
-        const today = new Date();
-        const tripStart = new Date('2026-01-01');
-        const daysUntilTrip = Math.ceil((tripStart - today) / (1000 * 60 * 60 * 24));
-        const forecastIndex = Math.max(0, daysUntilTrip + day - 1); 
-
-        if (forecastIndex >= forecastData.time.length) {
-            document.getElementById('w-loc').innerText = "太久遠無法預測";
-            return;
-        }
-
-        const maxTemp = Math.round(forecastData.temperature_2m_max[forecastIndex]);
-        const minTemp = Math.round(forecastData.temperature_2m_min[forecastIndex]);
-        const code = forecastData.weather_code[forecastIndex];
-        const precip = forecastData.precipitation_probability_mean[forecastIndex] || 0;
-
-        document.getElementById('w-temp').innerText = `${maxTemp}° / ${minTemp}°`;
-        document.getElementById('w-rain').innerText = `${precip}%`;
-        document.getElementById('w-desc').innerText = code < 3 ? "晴朗" : code < 50 ? "多雲" : "有雨";
-        document.getElementById('w-icon').innerText = weatherIcons[code] || '⛅';
-
-        const locations = dayLocations[day] || [{ name: "那霸市 Naha" }];
-        let locIndex = 0;
-
-        const updateLocUI = () => {
-            const el = document.getElementById('w-loc');
-            el.style.opacity = 0;
-            setTimeout(() => {
-                el.innerText = locations[locIndex].name;
-                el.style.opacity = 1;
-                locIndex = (locIndex + 1) % locations.length;
-            }, 400);
         };
-
-        updateLocUI();
-        if (locations.length > 1) {
-            weatherTimer = setInterval(updateLocUI, 3000);
-        }
-    }
-
-    init();
-</script>
+    </script>
 </body>
 </html>
