@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 V8.1</title>
+    <title>2026 沖繩之旅 V8.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -217,19 +217,93 @@
         .drag-handle { color: #ddd; font-size: 16px; cursor: grab; padding-right: 5px; display: flex; align-items: center; }
         
         /* Shop Image Support */
-        .shop-thumb {
-            width: 55px; height: 55px; border-radius: 8px; object-fit: cover;
-            background-color: #f0f0f0; flex-shrink: 0;
-            border: 1px solid #eee;
-        }
+	.shop-thumb {
+        	width: 60px;
+	        height: 60px;
+	        border-radius: 8px;
+        	object-fit: cover;
+	        background: #f0f0f0;
+        	flex-shrink: 0;
+	        border: 1px solid #eee;
+	        cursor: pointer;
+	        transition: transform 0.15s;
+    }
 
-        .shop-item-content { flex: 1; min-width: 0; /* Fix flex overflow */ }
-        .shop-header { display: flex; justify-content: space-between; margin-bottom: 2px; align-items: center; }
-        .shop-name { font-size: 15px; font-weight: bold; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
-        .shop-price { font-size: 13px; color: var(--accent); font-weight: bold; }
-        .shop-loc { font-size: 11px; color: var(--text-sub); background: #f0f0f0; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+    .shop-thumb:hover {
+        transform: scale(1.04);
+    }
 
-        input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--accent); margin-right: 8px; flex-shrink: 0; cursor: pointer; }
+    .shop-item-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .shop-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+    }
+
+    .shop-name {
+        font-size: 15px;
+        font-weight: bold;
+        color: var(--text-main);
+        line-height: 1.35;
+        flex: 1;
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    .shop-price {
+        font-size: 13px;
+        color: var(--accent);
+        font-weight: bold;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .search-btn {
+        color: #1976D2;
+        font-size: 20px;
+        padding: 4px 8px;
+        cursor: pointer;
+        flex-shrink: 0;
+        line-height: 1;
+    }
+
+    .shop-loc {
+        font-size: 11px;
+        color: var(--text-sub);
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .shop-remarks {
+        font-size: 11px;
+        color: #555;
+        margin-top: 3px;
+        display: block;
+        line-height: 1.3;
+    }
+
+    /* Enlarged image modal */
+    #image-modal .modal-content {
+        background: rgba(0,0,0,0.9);
+        padding: 20px;
+        max-width: 90%;
+        max-height: 90vh;
+        overflow: auto;
+    }
+
+    #enlarged-image {
+        max-width: 100%;
+        max-height: 85vh;
+        object-fit: contain;
+    }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); margin-right: 8px; flex-shrink: 0; cursor: pointer; }
         .todo-text { font-size: 14px; flex: 1; }
         
         /* Removed old delete btn */
@@ -377,6 +451,13 @@
     </div>
 </div>
 
+<div id="image-modal" class="modal" onclick="closeModal('image-modal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="closeModal('image-modal')">×</span>
+        <img id="enlarged-image" style="width:100%; height:auto; border-radius:8px;">
+    </div>
+</div>
+
 <script>
     const dayLocations = {
         1: [{ name: "北谷町 Chatan", lat: 26.360, lon: 127.804 }],
@@ -448,7 +529,7 @@
             { transport: "30min 駕車", icon: "🚗" },
             { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館。", loc: "沖繩世界", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Gyokusendo_Nanjo_Okinawa_Japan17s3104.jpg" },
             { transport: "45min 駕車", icon: "🚗" },
-            { time: "16:45", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
+            { time: "16:45", dur: "", type: "hotel", title: "返回酒店小休", desc: "La'gent Hotel Okinawa Naha", loc: "" },
             { transport: "10min 步行", icon: "🚶" },
             { time: "17:00", dur: "3.5hr", type: "spot", title: "國際通晚餐 & 逛街", desc: "那霸主要購物街，長1.6公里，充滿商店、餐廳和街頭表演。", loc: "國際通", hasOptions: true, img: "https://cdn.gaijinpot.com/app/uploads/sites/6/2016/06/Okinawa-International-Street-.jpg", options: [
                 { name: "國際通屋台村", desc: "集合20間小吃攤，氣氛熱鬧。", rec: "推介：串燒、沖繩料理", loc: "國際通屋台村" },
@@ -466,7 +547,7 @@
             { transport: "40min 駕車", icon: "🚗" },
             { time: "18:55", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" },
             { transport: "5min 步行", icon: "🚶" },
-            { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那覇松山店 厚切牛舌", loc: "燒肉ここから 那覇松山店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/b4/68/44/getlstd-property-photo.jpg?w=800&h=400&s=1" },
+            { time: "19:00", dur: "2hr", type: "food", title: "晚餐: 燒肉ここから", desc: "那霸久茂地店 厚切牛舌", loc: "燒肉ここから 那霸久茂地店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/b4/68/44/getlstd-property-photo.jpg?w=800&h=400&s=1" },
             { time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "" }
         ]},
         6: { date: "1/6 (週二)", events: [
@@ -577,37 +658,63 @@
             }
             container.innerHTML = html;
         } else if (tab === 'shop') {
-            container.innerHTML = todoData.shop.map((item, index) => {
-                // V8.2: Checkbox toggles data directly, Item click opens Edit
-                return createShopListItemHtml(item, index);
-            }).join('');
+           container.innerHTML = todoData.shop.map((item, index) => 
+     	  	 createShopListItemHtml(item, index)
+   	   ).join('');
         }
         addDragListeners();
     }
 
     // V8.2: New Item HTML generator with Edit on click & No Delete Button
-    function createShopListItemHtml(item, index) {
-        // V8.2: Google Image Search Link Logic for Image Error/Placeholder
-        const searchLink = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(item.name + ' Okinawa')}`;
-        
-        // V8.2: Image with fallback + click to search
-        const imgHtml = item.img ? 
-            `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/55x55?text=🔍'" onclick="event.stopPropagation(); window.open('${searchLink}', '_blank')">` : 
-            `<div class="shop-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;" onclick="event.stopPropagation(); window.open('${searchLink}', '_blank')">🔍</div>`;
-            
-        return `<div class="todo-item ${item.checked ? 'checked' : ''}" draggable="true" data-idx="${index}" onclick="openAddModal(${index})">
-                <span class="drag-handle" onclick="event.stopPropagation()">☰</span>
-                <input type="checkbox" onclick="event.stopPropagation()" onchange="toggleShopCheck(${index})" ${item.checked ? 'checked' : ''}>
-                ${imgHtml}
-                <div class="shop-item-content">
-                    <div class="shop-header">
-                        <span class="shop-name">${item.name}</span>
-                        <span class="shop-price">${item.price}</span>
-                    </div>
-                    <span class="shop-loc">📍${item.loc}</span>
-                </div>
-            </div>`;
-    }
+function createShopListItemHtml(item, index) {
+    const searchQuery = encodeURIComponent(item.name);
+    
+    // Image with enlarged view (click thumbnail to enlarge)
+    const imgHtml = item.img ? 
+        `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" 
+              onerror="this.src='https://placehold.co/60x60?text=?'" 
+              onclick="event.stopPropagation(); viewEnlargedImage('${item.img}')">` :
+        `<div class="shop-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px;background:#f8f9fa;">
+            ?
+         </div>`;
+
+    return `
+    <div class="todo-item ${item.checked ? 'checked' : ''}" 
+         draggable="true" 
+         data-idx="${index}" 
+         onclick="openAddModal(${index})">
+        <span class="drag-handle" onclick="event.stopPropagation()">☰</span>
+        <input type="checkbox" 
+               onclick="event.stopPropagation()" 
+               onchange="toggleShopCheck(${index})" 
+               ${item.checked ? 'checked' : ''}>
+        ${imgHtml}
+        <div class="shop-item-content">
+            <div class="shop-header">
+                <span class="shop-name">${item.name}</span>
+                <span class="shop-price">${item.price}</span>
+                <span class="search-btn" 
+                      onclick="event.stopPropagation(); window.open('https://www.google.com/search?q=${searchQuery}', '_blank')">🔍</span>
+            </div>
+            <span class="shop-loc">📍 ${item.loc}</span>
+            ${item.remarks ? `<span class="shop-remarks">📝 ${item.remarks}</span>` : ''}
+        </div>
+    </div>`;
+}
+
+function toggleShopCheck(index) {
+    todoData.shop[index].checked = !todoData.shop[index].checked;
+    saveData();
+    renderList('shop');
+}
+
+function viewEnlargedImage(src) {
+    const img = document.getElementById('enlarged-image');
+    img.src = src;
+    const modal = document.getElementById('image-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+}
 
     function toggleCategory(el) {
         const items = el.nextElementSibling;
@@ -648,15 +755,19 @@
             let name = '', loc = '', price = '', img = '';
             if (isEditMode) {
                 const item = todoData.shop[editIndex];
-                name = item.name;
-                loc = item.loc;
-                price = item.price;
-                img = item.img || '';
+                name = item.name || '';
+        	loc = item.loc || '';
+        	price = item.price || '';
+        	img = item.img || '';
+       		remarks = item.remarks || '';
             }
-            content.innerHTML = `<div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" placeholder="例如: 吹風機" value="${name}"></div>
-                <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" placeholder="例如: Bic Camera" value="${loc}"></div>
-                <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" placeholder="例如: HK$ 200" value="${price}"></div>
-                <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" placeholder="https://..." value="${img}"></div>
+content.innerHTML = `
+        <div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" value="${name}"></div>
+        <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" value="${loc}"></div>
+        <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" value="${price}"></div>
+        <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" value="${img}"></div>
+        <div class="form-group"><label class="form-label">備註 (選填)</label><input type="text" id="add-remarks" class="form-input" placeholder="例如：注意容量／限定色" value="${remarks}"></div>
+   
                 <!-- V8.2: Google Image Search Helper Button -->
                 <a href="#" onclick="searchGoogleImage()" class="btn-secondary">🔍 在 Google 搜尋此商品圖片</a>`;
             
@@ -681,19 +792,25 @@
         }
     }
 
-    function confirmModalAction() {
-        const name = document.getElementById('add-name').value;
-        if (!name) return;
-        
-        const loc = document.getElementById('add-loc').value || "";
-        const price = document.getElementById('add-price').value || "";
-        const img = document.getElementById('add-img').value || "";
-        
-        if (isEditMode) {
-            todoData.shop[editIndex] = { ...todoData.shop[editIndex], name, loc, price, img };
-        } else {
-            todoData.shop.push({ name, loc, price, img, checked: false });
-        }
+	function confirmModalAction() {
+	    const name = document.getElementById('add-name').value;
+	    if (!name) return;
+
+	    if (currentTab === 'shop') {
+        	const loc = document.getElementById('add-loc').value || "";
+        	const price = document.getElementById('add-price').value || "";
+        	const img = document.getElementById('add-img').value || "";
+        	const remarks = document.getElementById('add-remarks')?.value || "";
+
+        	if (isEditMode) {
+	            todoData.shop[editIndex] = { 
+        	        ...todoData.shop[editIndex], 
+                	name, loc, price, img, remarks 
+            	};
+        	} else {
+    	        todoData.shop.push({ name, loc, price, img, remarks, checked: false });
+        	}
+    	}
         
         saveData();
         renderList('shop');
