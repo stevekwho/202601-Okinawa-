@@ -1,0 +1,21 @@
+{
+  "name": "沖縄の旅 2026",
+  "short_name": "沖繩之旅",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#5B8996",
+  "theme_color": "#5B8996"
+}
