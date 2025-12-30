@@ -793,7 +793,7 @@ content.innerHTML = `
     window.searchGoogleImage = function() {
         const name = document.getElementById('add-name').value;
         if(name) {
-            window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name + ' product')}`, '_blank');
+            window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name)}`, '_blank');
         } else {
             alert('請先輸入商品名稱');
         }
