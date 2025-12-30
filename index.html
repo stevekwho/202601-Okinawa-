@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 V9.1</title>
+    <title>2026 沖繩之旅 V10.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/main/manifest.json">
 	<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<link rel="apple-touch-icon" sizes="192x192" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<style>
+        /* --- Styles Preserved --- */
         :root {
             --bg-color: #F9F9F7;       
             --card-bg: #FFFFFF;        
@@ -33,7 +34,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding-bottom: 80px; 
+            padding-bottom: 90px;
             overflow-x: hidden;
             user-select: none; 
         }
@@ -204,12 +205,14 @@
             cursor: pointer;
         }
         
-        /* Updated Shop Item for Better UX */
+        /* Updated Shop Item for Better UX - Reduced Gaps */
         .todo-item { 
             background: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; 
-            display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); 
+            display: flex; align-items: center; 
+            gap: 6px; /* V11: Reduced from 12px to 6px */
+            border: 1px solid var(--border); 
             transition: all 0.2s; touch-action: pan-y;
-            cursor: pointer; /* Indicates clickable for edit */
+            cursor: pointer;
         }
         .todo-item.dragging { opacity: 0.5; background: #f0f0f0; border: 2px dashed var(--primary); }
         .todo-item.checked { opacity: 0.6; background: #fbfbfb; }
@@ -217,7 +220,11 @@
         .todo-item.checked .shop-thumb { filter: grayscale(100%); opacity: 0.5; }
 
         /* Drag Handle */
-        .drag-handle { color: #ddd; font-size: 16px; cursor: grab; padding-right: 5px; display: flex; align-items: center; }
+        .drag-handle { 
+            color: #ddd; font-size: 16px; cursor: grab; 
+            padding-right: 2px; /* V11: Reduced padding */
+            display: flex; align-items: center; 
+        }
         
         /* Shop Image Support */
 	.shop-thumb {
@@ -244,7 +251,7 @@
     .shop-header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
         margin-bottom: 4px;
     }
 
@@ -267,9 +274,9 @@
     }
 
     .search-btn {
-        color: #1976D2;
-        font-size: 20px;
-        padding: 4px 8px;
+        color: #aaa;
+        font-size: 14px; /* V11: Smaller icon */
+        padding: 2px 4px; /* V11: Smaller padding */
         cursor: pointer;
         flex-shrink: 0;
         line-height: 1;
@@ -306,11 +313,11 @@
         max-height: 85vh;
         object-fit: contain;
     }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); margin-right: 8px; flex-shrink: 0; cursor: pointer; }
+        /* V11: Reduced check margin */
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); margin-right: 4px; flex-shrink: 0; cursor: pointer; }
         .todo-text { font-size: 14px; flex: 1; }
         
-        /* Removed old delete btn */
-        /* .delete-btn { ... } */
+        .delete-btn { font-size: 20px; color: #ccc; padding: 0 10px; cursor: pointer; }
 
         .hidden { display: none; }
 
@@ -351,15 +358,13 @@
         
         .btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         
-        /* New Delete Button Style for Modal */
         .btn-delete { 
             width: 100%; padding: 12px; background: transparent; color: #ff4d4f; 
             border: 1px solid #ff4d4f; border-radius: 8px; font-size: 16px; 
             font-weight: bold; cursor: pointer; margin-top: 10px; 
         }
         
-        /* New Google Search Link */
-        .btn-search-img {
+        .btn-search-img, .btn-secondary {
             display: block; text-align: center; margin-top: 5px; font-size: 12px; 
             color: #1976D2; text-decoration: none; padding: 8px; 
             background: #f0f8ff; border-radius: 6px;
@@ -369,6 +374,49 @@
         .opt-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
         .opt-desc { font-size: 13px; color: #666; margin-bottom: 8px; line-height: 1.4; }
         .opt-rec { font-size: 12px; color: var(--primary); background: rgba(91,137,150,0.1); padding: 5px 10px; border-radius: 6px; display: inline-block; }
+
+        /* --- Tools Page Added Styles --- */
+        .tool-card {
+            background: white; border-radius: 16px; padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .tool-header { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .currency-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .currency-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 18px; text-align: right; font-weight: bold; }
+        .currency-select { padding: 12px 5px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-weight: bold; font-size: 14px; }
+        .currency-result { text-align: right; font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 10px; }
+        .currency-rate-info { font-size: 11px; color: #999; text-align: right; margin-top: 5px; }
+        
+        .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .tool-btn {
+            background: white; border: 1px solid var(--border); border-radius: 16px;
+            padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            cursor: pointer; transition: transform 0.2s; text-decoration: none; color: var(--text-main);
+        }
+        .tool-btn:active { transform: scale(0.97); background: #fafafa; }
+        .tool-icon { font-size: 32px; margin-bottom: 5px; }
+        .tool-name { font-size: 14px; font-weight: bold; }
+        
+        /* Bookkeeping Styles */
+        .expense-input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .expense-input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .expense-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .expense-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
+        .expense-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f0f0f0; align-items: center; }
+        .expense-item:last-child { border-bottom: none; }
+        .expense-info { flex: 1; }
+        .expense-desc { font-weight: bold; font-size: 14px; }
+        .expense-date { font-size: 10px; color: #999; }
+        .expense-amt { font-weight: bold; color: var(--accent); margin-right: 10px; }
+        .expense-del { color: #ccc; cursor: pointer; font-size: 18px; }
+        .expense-total { font-size: 20px; font-weight: bold; color: var(--primary); text-align: right; margin-top: 15px; border-top: 2px solid #eee; padding-top: 10px; }
+
+        .emergency-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .emergency-row:last-child { border-bottom: none; }
+        .em-label { font-weight: bold; }
+        .em-val { color: #D32F2F; font-weight: bold; font-family: 'Roboto', sans-serif; }
     </style>
 </head>
 <body>
@@ -419,6 +467,82 @@
     <div id="fab-add" class="fab-btn" onclick="openAddModal()">+</div>
 </div>
 
+<!-- TOOLS PAGE -->
+<div id="page-tools" class="container hidden" style="padding-top: 20px; padding-bottom: 100px;">
+    
+    <!-- Currency Converter -->
+    <div class="tool-card">
+        <div class="tool-header">💱 匯率計算機</div>
+        <div class="currency-row">
+            <input type="number" id="curr-amount" class="currency-input" placeholder="1000" oninput="calcCurrency()">
+            <select id="curr-from" class="currency-select" onchange="calcCurrency()">
+                <option value="HKD">HKD</option>
+                <option value="JPY">JPY</option>
+                <option value="TWD">TWD</option>
+                <option value="USD">USD</option>
+            </select>
+        </div>
+        <div style="text-align: center; color: #ccc; margin: -10px 0 5px 0;">⇅</div>
+        <div class="currency-row">
+            <div id="curr-result-display" class="currency-input" style="background:#f5f5f5; border:none; display:flex; align-items:center; justify-content:flex-end;">--</div>
+            <select id="curr-to" class="currency-select" onchange="calcCurrency()">
+                <option value="JPY" selected>JPY</option>
+                <option value="HKD">HKD</option>
+                <option value="TWD">TWD</option>
+                <option value="USD">USD</option>
+            </select>
+        </div>
+        <div class="currency-rate-info" id="rate-info">匯率載入中...</div>
+    </div>
+
+    <!-- Expense Tracker (Bookkeeping) - V11 New Feature -->
+    <div class="tool-card">
+        <div class="tool-header">💴 旅遊記帳</div>
+        <div class="expense-input-row">
+            <input type="text" id="exp-desc" class="expense-input" placeholder="項目 (如: 午餐)">
+        </div>
+        <div class="expense-input-row">
+            <input type="number" id="exp-amt" class="expense-input" placeholder="金額 (¥)">
+            <button class="expense-btn" onclick="addExpense()">新增</button>
+        </div>
+        <div class="expense-list" id="expense-list-container">
+            <!-- Items go here -->
+        </div>
+        <div class="expense-total">
+            總支出: ¥<span id="expense-total-val">0</span>
+        </div>
+    </div>
+
+    <!-- Quick Tools Grid -->
+    <div class="tools-grid">
+        <a href="https://www.locasma.jp/" target="_blank" class="tool-btn">
+            <div class="tool-icon">🅿️</div>
+            <div class="tool-name">LocaSma 停車<br><span style="font-size:10px;color:#999;font-weight:normal">找停車場/連鎖店</span></div>
+        </a>
+        <a href="https://translate.google.com/?sl=auto&tl=ja&op=translate" target="_blank" class="tool-btn">
+            <div class="tool-icon">🗣️</div>
+            <div class="tool-name">Google 翻譯<br><span style="font-size:10px;color:#999;font-weight:normal">語音/拍照翻譯</span></div>
+        </a>
+    </div>
+
+    <!-- Emergency Info -->
+    <div class="tool-card" style="margin-top: 20px;">
+        <div class="tool-header" style="color:#D32F2F;">🚑 緊急聯絡</div>
+        <div class="emergency-row">
+            <span class="em-label">警察 (Police)</span>
+            <span class="em-val">110</span>
+        </div>
+        <div class="emergency-row">
+            <span class="em-label">救護車/火警 (Fire/Amb)</span>
+            <span class="em-val">119</span>
+        </div>
+        <div class="emergency-row" style="border:none; padding-top:15px; display:block;">
+            <div class="em-label" style="margin-bottom:5px;">租車公司 (OkiBlues)</div>
+            <a href="tel:098-XXX-XXXX" style="color:var(--primary); text-decoration:none;">📞 點擊撥打 (請填入號碼)</a>
+        </div>
+    </div>
+</div>
+
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchPage('itinerary')" id="nav-itinerary">
         <span class="nav-icon">🗺️</span>
@@ -427,6 +551,10 @@
     <div class="nav-item" onclick="switchPage('list')" id="nav-list">
         <span class="nav-icon">📋</span>
         <span class="nav-label">清單</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('tools')" id="nav-tools">
+        <span class="nav-icon">🛠️</span>
+        <span class="nav-label">工具</span>
     </div>
 </nav>
 
@@ -597,7 +725,7 @@
     };
 
     let todoData = { pre: {}, shop: [] }; 
-    // V8.2: Default tab set to 'shop'
+    let expenses = []; // V11
     let currentTab = 'shop'; 
     let forecastData = null;
     let weatherTimer = null; 
@@ -608,14 +736,17 @@
     let currentDay = 1;
     let isEditMode = false;
     let editIndex = -1;
+    let rates = { HKD: 1, JPY: 19.5, TWD: 4.1, USD: 0.13 }; 
 
     function init() {
         loadData();
         renderDayNav();
         renderItinerary(1);
-        renderList('shop'); // V8.2: Start with shopping list
+        renderList('shop'); 
         updateCountdown();
         fetchForecast(); 
+        initCurrency();
+        initExpenses(); // V11
     }
 
     function triggerHaptic() {
@@ -625,7 +756,6 @@
     function loadData() {
         const savedPre = localStorage.getItem('okinawa_pre_v7');
         todoData.pre = savedPre ? JSON.parse(savedPre) : defaultPreList;
-        // Check for V8.2 specific data to preserve toggle state
         const savedShop = localStorage.getItem('okinawa_shop_v8_2'); 
         todoData.shop = savedShop ? JSON.parse(savedShop) : defaultShopList;
     }
@@ -635,12 +765,101 @@
         localStorage.setItem('okinawa_shop_v8_2', JSON.stringify(todoData.shop));
     }
 
+    // --- Expense Logic V11 ---
+    function initExpenses() {
+        const savedExp = localStorage.getItem('okinawa_expenses');
+        expenses = savedExp ? JSON.parse(savedExp) : [];
+        renderExpenses();
+    }
+
+    function addExpense() {
+        const desc = document.getElementById('exp-desc').value;
+        const amt = parseFloat(document.getElementById('exp-amt').value);
+        if(!desc || isNaN(amt)) return alert("請輸入項目和金額");
+
+        expenses.push({ desc, amt, date: new Date().toLocaleDateString() });
+        localStorage.setItem('okinawa_expenses', JSON.stringify(expenses));
+        
+        document.getElementById('exp-desc').value = "";
+        document.getElementById('exp-amt').value = "";
+        renderExpenses();
+    }
+
+    function deleteExpense(idx) {
+        if(confirm("刪除此筆支出?")) {
+            expenses.splice(idx, 1);
+            localStorage.setItem('okinawa_expenses', JSON.stringify(expenses));
+            renderExpenses();
+        }
+    }
+
+    function renderExpenses() {
+        const container = document.getElementById('expense-list-container');
+        let html = '';
+        let total = 0;
+        
+        expenses.slice().reverse().forEach((item, index) => {
+            const realIdx = expenses.length - 1 - index;
+            total += item.amt;
+            html += `<div class="expense-item">
+                <div class="expense-info">
+                    <div class="expense-desc">${item.desc}</div>
+                    <div class="expense-date">${item.date}</div>
+                </div>
+                <div class="expense-amt">¥${item.amt}</div>
+                <div class="expense-del" onclick="deleteExpense(${realIdx})">×</div>
+            </div>`;
+        });
+        
+        container.innerHTML = html || '<div style="text-align:center;color:#ccc;padding:10px;">尚無支出紀錄</div>';
+        document.getElementById('expense-total-val').innerText = total.toLocaleString();
+    }
+
+    // --- Currency Logic ---
+    async function initCurrency() {
+        // Try local storage first
+        const cached = localStorage.getItem('exchange_rates');
+        if(cached) {
+            const data = JSON.parse(cached);
+            if(Date.now() - data.timestamp < 24 * 60 * 60 * 1000) { 
+                rates = data.rates;
+                document.getElementById('rate-info').innerText = "匯率更新於: " + new Date(data.timestamp).toLocaleDateString();
+                return;
+            }
+        }
+        
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
+            const data = await res.json();
+            rates = data.rates;
+            localStorage.setItem('exchange_rates', JSON.stringify({ rates: rates, timestamp: Date.now() }));
+            document.getElementById('rate-info').innerText = "匯率已更新 (HKD基準)";
+        } catch(e) {
+            document.getElementById('rate-info').innerText = "離線模式 (使用預設匯率)";
+        }
+    }
+
+    function calcCurrency() {
+        const amount = parseFloat(document.getElementById('curr-amount').value);
+        if(isNaN(amount)) {
+            document.getElementById('curr-result-display').innerText = "--";
+            return;
+        }
+        const from = document.getElementById('curr-from').value;
+        const to = document.getElementById('curr-to').value;
+        
+        const inHKD = amount / rates[from];
+        const result = inHKD * rates[to];
+        
+        document.getElementById('curr-result-display').innerText = result.toLocaleString(undefined, {maximumFractionDigits: 1});
+    }
+
     function renderList(tab) {
         currentTab = tab;
         document.querySelectorAll('.list-tab').forEach((el, idx) => el.classList.toggle('active', ['pre','shop'][idx] === (tab === 'pre' ? 0 : 1)));
         const container = document.getElementById('list-content');
         const fab = document.getElementById('fab-add');
-        fab.style.display = 'flex'; 
+        if (fab) fab.style.display = 'flex'; 
 
         if (tab === 'pre') {
             let html = '';
@@ -668,11 +887,9 @@
         addDragListeners();
     }
 
-    // V8.2: New Item HTML generator with Edit on click & No Delete Button
 function createShopListItemHtml(item, index) {
     const searchQuery = encodeURIComponent(item.name);
     
-    // Image with enlarged view (click thumbnail to enlarge)
     const imgHtml = item.img ? 
        `<img src="${item.img}" 
           class="shop-thumb" 
@@ -728,7 +945,6 @@ function viewEnlargedImage(src) {
         el.querySelector('span').innerText = isHidden ? '▼' : '▶';
     }
 
-    // V8.2: New Toggle Logic for Shop (Data Driven)
     function toggleShopCheck(index) {
         triggerHaptic();
         todoData.shop[index].checked = !todoData.shop[index].checked;
@@ -754,10 +970,9 @@ function viewEnlargedImage(src) {
         const footer = document.getElementById('add-modal-footer');
         
         if (currentTab === 'pre') {
-            // Pre-list logic remains simple
             return; 
         } else if (currentTab === 'shop') {
-            let name = '', loc = '', price = '', img = '';
+            let name = '', loc = '', price = '', img = '', remarks = '';
             if (isEditMode) {
                 const item = todoData.shop[editIndex];
                 name = item.name || '';
@@ -770,15 +985,12 @@ content.innerHTML = `
         <div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" value="${name}"></div>
         <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" value="${loc}"></div>
         <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" value="${price}"></div>
-        <div class="form-group"><label class="form-label">圖片</label><input type="text" id="add-img" class="form-input" placeholder="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/images/shopping/檔名.jpg"
+        <div class="form-group"><label class="form-label">圖片</label><input type="text" id="add-img" class="form-input" placeholder="https://..."
            value="${img || ''}">
 </div>
         <div class="form-group"><label class="form-label">備註 (選填)</label><input type="text" id="add-remarks" class="form-input" placeholder="例如：注意容量／限定色" value="${remarks}"></div>
-   
-                <!-- V8.2: Google Image Search Helper Button -->
-                <a href="#" onclick="searchGoogleImage()" class="btn-secondary">🔍 在 Google 搜尋此商品圖片</a>`;
+        <a href="#" onclick="searchGoogleImage()" class="btn-search-img">🔍 在 Google 搜尋此商品圖片</a>`;
             
-            // V8.2: Delete button ONLY in Modal
             let buttonsHtml = `<button class="btn-primary" onclick="confirmModalAction()">確認儲存</button>`;
             if (isEditMode) {
                 buttonsHtml += `<button class="btn-delete" onclick="deleteShopItemInModal(${editIndex})">刪除此項目</button>`;
@@ -789,7 +1001,6 @@ content.innerHTML = `
         setTimeout(() => modal.classList.add('show'), 10);
     }
 
-    // V8.2: Helper to open Google Image Search
     window.searchGoogleImage = function() {
         const name = document.getElementById('add-name').value;
         if(name) {
@@ -858,7 +1069,6 @@ content.innerHTML = `
         if (dragSrcEl !== target && currentTab === 'shop') {
             const srcIdx = parseInt(dragSrcEl.dataset.idx);
             const destIdx = parseInt(target.dataset.idx);
-            // Swap in data array
             const temp = todoData.shop[srcIdx];
             todoData.shop[srcIdx] = todoData.shop[destIdx];
             todoData.shop[destIdx] = temp;
@@ -876,6 +1086,15 @@ content.innerHTML = `
             html += `<div class="day-btn ${day == 1 ? 'active' : ''}" onclick="switchDay(${day})"><span>Day ${day}</span><span>${itineraryData[day].date.split(' ')[0]}</span></div>`;
         });
         wrapper.innerHTML = html;
+    }
+
+    // --- Restored V9.1 Logic for Tags ---
+    function getTagLabel(title, type) {
+        if (title.includes("午餐")) return "午餐";
+        if (title.includes("晚餐")) return "晚餐";
+        if (title.includes("早餐")) return "早餐";
+        const map = { flight: "航班", transport: "交通", drive: "駕車", food: "美食", spot: "景點", hotel: "住宿", shop: "購物" };
+        return map[type] || "其他";
     }
 
     function renderItinerary(day) {
@@ -948,24 +1167,27 @@ content.innerHTML = `
         setTimeout(() => modal.style.display = "none", 300);
     }
 
-    function getTagLabel(title, type) {
-        if (title.includes("午餐")) return "午餐";
-        if (title.includes("晚餐")) return "晚餐";
-        if (title.includes("早餐")) return "早餐";
-        const map = { flight: "航班", transport: "交通", drive: "駕車", food: "美食", spot: "景點", hotel: "住宿", shop: "購物" };
-        return map[type] || "其他";
-    }
-
     function switchDay(day) { triggerHaptic(); renderItinerary(day); }
     function switchListTab(tab) { triggerHaptic(); renderList(tab); }
+    
     function switchPage(page) {
         triggerHaptic();
+        // Toggle visibility
         document.getElementById('page-itinerary').classList.toggle('hidden', page !== 'itinerary');
         document.getElementById('page-list').classList.toggle('hidden', page !== 'list');
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.id === 'nav-' + page));
+        document.getElementById('page-tools').classList.toggle('hidden', page !== 'tools');
+        
+        // Toggle Nav Active State
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('nav-' + page).classList.add('active');
+
+        // FAB Logic
+        const fab = document.getElementById('fab-add');
         if (page === 'list') {
-            document.getElementById('fab-add').style.display = 'flex';
-        } else { document.getElementById('fab-add').style.display = 'none'; }
+            fab.style.display = 'flex';
+        } else { 
+            fab.style.display = 'none'; 
+        }
         window.scrollTo(0,0);
     }
 
