@@ -671,12 +671,14 @@ function createShopListItemHtml(item, index) {
     
     // Image with enlarged view (click thumbnail to enlarge)
     const imgHtml = item.img ? 
-        `<img src="${item.img}" class="shop-thumb" referrerpolicy="no-referrer" loading="lazy" 
-              onerror="this.src='https://placehold.co/60x60?text=?'" 
-              onclick="event.stopPropagation(); viewEnlargedImage('${item.img}')">` :
-        `<div class="shop-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px;background:#f8f9fa;">
-            ?
-         </div>`;
+       `<img src="${item.img}" 
+          class="shop-thumb" 
+          loading="lazy" 
+          referrerpolicy="no-referrer" 
+          onerror="this.src='https://placehold.co/60x60?text=?'" 
+          onclick="event.stopPropagation(); viewEnlargedImage('${item.img}')">` 
+    : 
+    `<div class="shop-thumb placeholder" onclick="event.stopPropagation(); alert('請先上傳圖片到 GitHub 儲存庫')">?</div>`;
 
     return `
     <div class="todo-item ${item.checked ? 'checked' : ''}" 
@@ -765,7 +767,12 @@ content.innerHTML = `
         <div class="form-group"><label class="form-label">商品名稱</label><input type="text" id="add-name" class="form-input" value="${name}"></div>
         <div class="form-group"><label class="form-label">購買地點</label><input type="text" id="add-loc" class="form-input" value="${loc}"></div>
         <div class="form-group"><label class="form-label">參考價格</label><input type="text" id="add-price" class="form-input" value="${price}"></div>
-        <div class="form-group"><label class="form-label">圖片網址 (選填)</label><input type="text" id="add-img" class="form-input" value="${img}"></div>
+        <div class="form-group"><label class="form-label">圖片</label><input type="text" id="add-img" class="form-input" placeholder="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/images/shopping/檔名.jpg"
+           value="${img || ''}"><small style="color:#666; font-size:11px; display:block; margin-top:5px;">
+        上傳圖片後 → 右鍵圖片 → 複製圖片位址 → 貼到這裡<br>
+        範例：https://raw.githubusercontent.com/xxx/okinawa-trip/main/images/item1.jpg
+    </small>
+</div>
         <div class="form-group"><label class="form-label">備註 (選填)</label><input type="text" id="add-remarks" class="form-input" placeholder="例如：注意容量／限定色" value="${remarks}"></div>
    
                 <!-- V8.2: Google Image Search Helper Button -->
