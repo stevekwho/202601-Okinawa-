@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2026 沖繩之旅 V11.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/main/manifest.json">
+	<link rel="manifest" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/main/manifest.json">
 	<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<link rel="apple-touch-icon" sizes="192x192" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<style>
@@ -112,6 +112,7 @@
         }
         .time-start { font-size: 14px; font-weight: 700; color: var(--text-main); font-family: 'Roboto', sans-serif; }
         .time-dur { font-size: 10px; color: var(--text-sub); display: block; margin-top: 2px; }
+        .time-end { font-size: 12px; color: #888; display: block; margin-top: 2px; }
 
         .event-card {
             flex: 1; background: var(--card-bg); border-radius: 16px; padding: 15px;
@@ -386,7 +387,7 @@
         .currency-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 18px; text-align: right; font-weight: bold; }
         .currency-select { padding: 12px 5px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-weight: bold; font-size: 14px; }
         .currency-result { text-align: right; font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 10px; }
-        .currency-rate-info { font-size: 11px; color: #999; text-align: right; margin-top: 5px; }
+        .currency-rate-info { font-size: 11px; color: #999; text-align: right; margin-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
         
         .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .tool-btn {
@@ -476,23 +477,26 @@
         <div class="currency-row">
             <input type="number" id="curr-amount" class="currency-input" placeholder="1000" oninput="calcCurrency()">
             <select id="curr-from" class="currency-select" onchange="calcCurrency()">
+                <option value="JPY" selected>JPY</option>
                 <option value="HKD">HKD</option>
-                <option value="JPY">JPY</option>
-                <option value="TWD">TWD</option>
-                <option value="USD">USD</option>
+                <option value="AUD">AUD</option>
+                <option value="GBP">GBP</option>
             </select>
         </div>
         <div style="text-align: center; color: #ccc; margin: -10px 0 5px 0;">⇅</div>
         <div class="currency-row">
-            <div id="curr-result-display" class="currency-input" style="background:#f5f5f5; border:none; display:flex; align-items:center; justify-content:flex-end;">--</div>
+            <input type="number" id="curr-result" class="currency-input" placeholder="--" oninput="calcCurrency(true)">
             <select id="curr-to" class="currency-select" onchange="calcCurrency()">
-                <option value="JPY" selected>JPY</option>
-                <option value="HKD">HKD</option>
-                <option value="TWD">TWD</option>
-                <option value="USD">USD</option>
+                <option value="HKD" selected>HKD</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="GBP">GBP</option>
             </select>
         </div>
-        <div class="currency-rate-info" id="rate-info">匯率載入中...</div>
+        <div class="currency-rate-info">
+            <span id="rate-text">匯率載入中...</span>
+            <button style="font-size:11px; padding:2px 6px; border:none; background:#eee; border-radius:4px; cursor:pointer;" onclick="refreshRates()">更新</button>
+        </div>
     </div>
 
     <!-- Expense Tracker (Bookkeeping) - V11 New Feature -->
@@ -500,6 +504,15 @@
         <div class="tool-header">💴 旅遊記帳</div>
         <div class="expense-input-row">
             <input type="text" id="exp-desc" class="expense-input" placeholder="項目 (如: 午餐)">
+        </div>
+        <div class="expense-input-row">
+            <select id="exp-method" class="expense-input">
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Alipay">Alipay</option>
+                <option value="Paypay">Paypay</option>
+                <option value="Other">Other</option>
+            </select>
         </div>
         <div class="expense-input-row">
             <input type="number" id="exp-amt" class="expense-input" placeholder="金額 (¥)">
@@ -511,6 +524,7 @@
         <div class="expense-total">
             總支出: ¥<span id="expense-total-val">0</span>
         </div>
+        <button class="btn-secondary" style="width:100%; margin-top:10px;" onclick="exportExpenses()">匯出 CSV</button>
     </div>
 
     <!-- Quick Tools Grid -->
@@ -781,9 +795,10 @@
     function addExpense() {
         const desc = document.getElementById('exp-desc').value;
         const amt = parseFloat(document.getElementById('exp-amt').value);
+        const method = document.getElementById('exp-method').value;
         if(!desc || isNaN(amt)) return alert("請輸入項目和金額");
 
-        expenses.push({ desc, amt, date: new Date().toLocaleDateString() });
+        expenses.push({ desc, amt, date: new Date().toLocaleDateString(), method });
         localStorage.setItem('okinawa_expenses', JSON.stringify(expenses));
         
         document.getElementById('exp-desc').value = "";
@@ -809,7 +824,7 @@
             total += item.amt;
             html += `<div class="expense-item">
                 <div class="expense-info">
-                    <div class="expense-desc">${item.desc}</div>
+                    <div class="expense-desc">${item.desc} ${item.method ? `<span style="font-size:12px; color:#888;">(${item.method})</span>` : ''}</div>
                     <div class="expense-date">${item.date}</div>
                 </div>
                 <div class="expense-amt">¥${item.amt}</div>
@@ -821,43 +836,91 @@
         document.getElementById('expense-total-val').innerText = total.toLocaleString();
     }
 
+    function exportExpenses() {
+        if (expenses.length === 0) {
+            alert("沒有支出紀錄可匯出");
+            return;
+        }
+        const header = ['Date', 'Description', 'Amount', 'Method'];
+        const csvContent = [
+            header.join(','),
+            ...expenses.map(item => [
+                item.date,
+                `"${item.desc.replace(/"/g, '""')}"`,
+                item.amt,
+                item.method
+            ].join(','))
+        ].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'okinawa_expenses.csv';
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     // --- Currency Logic ---
     async function initCurrency() {
-        // Try local storage first
         const cached = localStorage.getItem('exchange_rates');
         if(cached) {
             const data = JSON.parse(cached);
-            if(Date.now() - data.timestamp < 24 * 60 * 60 * 1000) { 
-                rates = data.rates;
-                document.getElementById('rate-info').innerText = "匯率更新於: " + new Date(data.timestamp).toLocaleDateString();
-                return;
-            }
+            rates = data.rates;
+            document.getElementById('rate-text').innerText = "匯率更新於: " + new Date(data.timestamp).toLocaleDateString();
         }
-        
+
         try {
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
             const data = await res.json();
             rates = data.rates;
             localStorage.setItem('exchange_rates', JSON.stringify({ rates: rates, timestamp: Date.now() }));
-            document.getElementById('rate-info').innerText = "匯率已更新 (HKD基準)";
+            document.getElementById('rate-text').innerText = "匯率已更新於: " + new Date().toLocaleDateString();
+            calcCurrency();
         } catch(e) {
-            document.getElementById('rate-info').innerText = "離線模式 (使用預設匯率)";
+            if(!cached) document.getElementById('rate-text').innerText = "離線模式";
         }
     }
 
-    function calcCurrency() {
-        const amount = parseFloat(document.getElementById('curr-amount').value);
-        if(isNaN(amount)) {
-            document.getElementById('curr-result-display').innerText = "--";
+    async function refreshRates() {
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
+            const data = await res.json();
+            rates = data.rates;
+            localStorage.setItem('exchange_rates', JSON.stringify({ rates: rates, timestamp: Date.now() }));
+            document.getElementById('rate-text').innerText = "匯率已更新於: " + new Date().toLocaleDateString();
+            calcCurrency();
+        } catch(e) {
+            alert("無法更新匯率");
+        }
+    }
+
+    function calcCurrency(reverse = false) {
+        let amount, fromCurr, toCurr, resultElem, inputElem;
+        if (reverse) {
+            amount = parseFloat(document.getElementById('curr-result').value);
+            fromCurr = document.getElementById('curr-to').value;
+            toCurr = document.getElementById('curr-from').value;
+            resultElem = document.getElementById('curr-amount');
+            inputElem = document.getElementById('curr-result');
+        } else {
+            amount = parseFloat(document.getElementById('curr-amount').value);
+            fromCurr = document.getElementById('curr-from').value;
+            toCurr = document.getElementById('curr-to').value;
+            resultElem = document.getElementById('curr-result');
+            inputElem = document.getElementById('curr-amount');
+        }
+        
+        if (isNaN(amount)) {
+            resultElem.value = "";
             return;
         }
-        const from = document.getElementById('curr-from').value;
-        const to = document.getElementById('curr-to').value;
         
-        const inHKD = amount / rates[from];
-        const result = inHKD * rates[to];
+        const inHKD = amount / rates[fromCurr];
+        const result = inHKD * rates[toCurr];
         
-        document.getElementById('curr-result-display').innerText = result.toLocaleString(undefined, {maximumFractionDigits: 1});
+        resultElem.value = result.toLocaleString(undefined, {maximumFractionDigits: 1});
     }
 
     function renderList(tab) {
@@ -1103,6 +1166,33 @@ content.innerHTML = `
         return map[type] || "其他";
     }
 
+    function parseTime(str) {
+        const [h, m] = str.split(':').map(Number);
+        return h * 60 + m;
+    }
+
+    function formatTime(min) {
+        const h = Math.floor(min / 60).toString().padStart(2, '0');
+        const m = Math.floor(min % 60).toString().padStart(2, '0');
+        return `${h}:${m}`;
+    }
+
+    function computeEndTime(start, dur) {
+        if (!dur) return '';
+        let durMin = 0;
+        const hrMatch = dur.match(/(\d+(\.\d+)?)hr/);
+        if (hrMatch) {
+            durMin += parseFloat(hrMatch[1]) * 60;
+        }
+        const minMatch = dur.match(/(\d+)min/);
+        if (minMatch) {
+            durMin += parseFloat(minMatch[1]);
+        }
+        const startMin = parseTime(start);
+        const endMin = (startMin + durMin) % 1440;
+        return formatTime(endMin);
+    }
+
     function renderItinerary(day) {
         currentDay = day;
         document.querySelectorAll('.day-btn').forEach((btn, idx) => btn.classList.toggle('active', (idx + 1) == day));
@@ -1112,7 +1202,7 @@ content.innerHTML = `
             if (evt.transport) {
                 html += `<div class="transport-spacer"><div class="transport-line"></div><div class="transport-tag">${evt.icon} ${evt.transport}</div></div>`;
             } else if (evt.type === 'flight') {
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}</span><span class="time-dur">${evt.dur}</span></div>
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${evt.endTime ? ` - ${evt.endTime}` : ''}</span><span class="time-dur">${evt.dur}</span></div>
                         <div class="ticket-card"><div class="ticket-header"><div style="display: flex; align-items: center; gap: 8px;">
                         <img src="https://1000logos.net/wp-content/uploads/2020/04/AirAsia-Logo-2012.png" alt="AirAsia" style="height: 20px;"><span>Thai AirAsia</span></div><span>${evt.title}</span></div>
                         <div class="ticket-body"><div class="ticket-point"><div class="ticket-time">${evt.time}</div><div class="ticket-city">${evt.desc.split(' -> ')[0]}</div></div>
@@ -1132,7 +1222,10 @@ content.innerHTML = `
                     imgHtml = `<div class="event-img-box"><img src="${evt.img}" class="event-spot-img" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='https://placehold.co/80x80?text=Spot'"></div>`;
                 }
 
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}</span><span class="time-dur">${evt.dur}</span></div>
+                const endTime = evt.endTime || computeEndTime(evt.time, evt.dur);
+
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${endTime ? ` - ${endTime}` : ''}</span>
+                        <span class="time-dur">${evt.dur}</span></div>
                         <div class="event-card ${clickClass}" ${clickAttr}>
                             <div class="event-main-content">
                                 <span class="tag" style="background:${typeColors[evt.type] || '#eee'}; color:${evt.type==='flight'?'#fff':'#333'}">${getTagLabel(evt.title, evt.type)}</span>
@@ -1204,7 +1297,7 @@ content.innerHTML = `
     
     async function fetchForecast() {
         try {
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14');
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=7&models=jma_seamless');
             const data = await res.json();
             forecastData = data.daily;
             updateWeatherCard(1);
