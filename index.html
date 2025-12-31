@@ -1297,7 +1297,7 @@ content.innerHTML = `
     
     async function fetchForecast() {
         try {
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14&models=jma_seamless');
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=7');
             const data = await res.json();
             forecastData = data.daily;
             updateWeatherCard(1);
