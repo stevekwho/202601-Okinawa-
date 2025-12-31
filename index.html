@@ -475,7 +475,7 @@
     <div class="tool-card">
         <div class="tool-header">💱 匯率計算機</div>
         <div class="currency-row">
-            <input type="number" id="curr-amount" class="currency-input" placeholder="--" oninput="calcCurrency()">
+            <input type="number" id="curr-amount" class="currency-input" placeholder="1000" oninput="calcCurrency()">
             <select id="curr-from" class="currency-select" onchange="calcCurrency()">
                 <option value="JPY" selected>JPY</option>
                 <option value="HKD">HKD</option>
@@ -616,7 +616,6 @@
     const itineraryData = {
         1: { date: "1/1 (週四)", events: [
             { time: "13:10", endTime: "16:40", dur: "3.5hr", type: "flight", title: "FD 518", desc: "HKG -> OKA", loc: "那霸機場" },
-			{ time: "16:40", dur: "35mins", type: "", title: "入境手續", desc: "", loc: "" }
             { transport: "15mins 接送", icon: "🚐" },
             { time: "17:30", dur: "30min", type: "transport", title: "取車", desc: "OkiBlues 中文租車公司", loc: "Oki Blues 中文租車公司" },
             { transport: "1hr 駕車至北谷", icon: "🚗" },
@@ -656,7 +655,7 @@
             { time: "10:00", dur: "1hr", type: "spot", title: "北谷町閒逛", desc: "晨間美國村，沖繩最大的美國風情購物區，充滿特色商店。", loc: "美國村", img: "https://c8.alamy.com/comp/W4CCK0/american-village-japan-september-17-2018-shop-mall-of-the-american-village-of-chatan-city-in-okinawa-island-W4CCK0.jpg" },
             { time: "11:00", dur: "", type: "hotel", title: "酒店Check-Out", desc: "檢查物品沒有遺漏", loc: "" },
 			{ transport: "20min 駕車", icon: "🚗" },
-            { time: "11:30", dur: "1hr15mins", type: "food", title: "午餐:沖繩麵 そばナンクル796", desc: "推介:究極沖繩麵(至高の沖縄そば) or 香草奶油雞肉咖啡沖繩麵(ハーブ香るバターキチンカレーそば)", loc: "沖縄そば ナンクル796", img: "https://files.kozaweb.jp/prd_uploads/files/2023/07/HnrJISZolsfAkfmEuViulhA9MO87xd699oIHdv0Z.jpeg" },
+            { time: "11:30", dur: "1.5hr", type: "food", title: "午餐:沖繩麵 そばナンクル796", desc: "推介:究極沖繩麵(至高の沖縄そば) or 香草奶油雞肉咖啡沖繩麵(ハーブ香るバターキチンカレーそば)", loc: "沖縄そば ナンクル796", img: "https://files.kozaweb.jp/prd_uploads/files/2023/07/HnrJISZolsfAkfmEuViulhA9MO87xd699oIHdv0Z.jpeg" },
             { transport: "20min 駕車", icon: "🚗" },
             { time: "13:15", dur: "5.5hr", type: "shop", title: "Aeon Mall Rycom", desc: "沖繩最大購物中心 & Pokemon Store", loc: "Aeon Mall Okinawa Rycom", img: "https://resources.matcha-jp.com/resize/720x2000/2023/10/02-147649.webp" },
             { transport: "45min 駕車", icon: "🚗" },
@@ -672,7 +671,7 @@
             { transport: "20min 駕車", icon: "🚗" },
             { time: "10:30", dur: "1hr", type: "spot", title: "首里城 / 西來院", desc: "琉球王國古城，融合中日建築，包含達磨寺和首里城公園。", loc: "首里城", img: "https://upload.wikimedia.org/wikipedia/commons/5/56/Naha_Okinawa_Japan_Shuri-Castle-01.jpg" },
             { transport: "10min 駕車", icon: "🚗" },
-            { time: "11:40", dur: "1hr 15mins", type: "food", title: "午餐: 首里茶房 美里うどぅん", desc: "沖繩料理", loc: "首里茶房 美里うどぅん", img: "https://tblg.k-img.com/restaurant/images/Rvw/311124/320x320_square_2806ee33c3d5101d6950e316ea6ce150.jpg" },
+            { time: "11:40", dur: "1.5hr", type: "food", title: "午餐: 首里茶房 美里うどぅん", desc: "沖繩料理", loc: "首里茶房 美里うどぅん", img: "https://tblg.k-img.com/restaurant/images/Rvw/311124/320x320_square_2806ee33c3d5101d6950e316ea6ce150.jpg" },
             { transport: "30min 駕車", icon: "🚗" },
             { time: "13:30", dur: "2.5hr", type: "spot", title: "沖繩世界 文化王國", desc: "沖繩文化主題公園，包括玉泉洞鐘乳石洞、手工藝村和蛇博物館。", loc: "沖繩世界", img: "https://upload.wikimedia.org/wikipedia/commons/d/da/Gyokusendo_Nanjo_Okinawa_Japan17s3104.jpg" },
             { transport: "45min 駕車", icon: "🚗" },
@@ -695,13 +694,13 @@
             { time: "13:10", dur: "6hr", type: "shop", title: "Ashibinaa Outlet", desc: "品牌折扣購物中心", loc: "Ashibinaa Outlet", img: "https://static.gltjp.com/glt/data/directory/15000/14433/20241101_175433_0fdb1447_w1920.webp" },
             { transport: "10min 駕車", icon: "🚗" },
             { time: "19:30", dur: "1hr", type: "food", title: "晚餐: 暖暮拉麵", desc: "系滿店", loc: "暖暮拉麵 系滿店", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2f/f9/26/e8/caption.jpg?w=900&h=500&s=1" },
-            { transport: "25min 駕車", icon: "🚗" },
+            { transport: "40min 駕車", icon: "🚗" },
 			{ time: "21:10", dur: "", type: "hotel", title: "返回酒店", desc: "La'gent Hotel Okinawa Naha", loc: "La'gent Hotel Okinawa Naha" }
         ]},
         6: { date: "1/6 (週二)", events: [
             { time: "10:00", dur: "", type: "hotel", title: "酒店Check-out", desc: "檢查物品沒有遺漏", loc: "" },
             { transport: "40min 駕車", icon: "🚗" },
-            { time: "10:45", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島。", loc: "瀨長島", hasOptions: true, img: "https://visitokinawajapan.com/wp-content/uploads/2024/02/de36_kv_senaga-island-umikaji-terrace.webp" , options: [
+            { time: "11:00", dur: "3.5hr", type: "spot", title: "瀨長島 Umikaji Terrace", desc: "希臘風白色露台商圈，俯瞰機場和慶良間群島。", loc: "瀨長島", hasOptions: true, img: "https://visitokinawajapan.com/wp-content/uploads/2024/02/de36_kv_senaga-island-umikaji-terrace.webp" , options: [
                 { name: "幸福鬆餅 (幸せのパンケーキ ウミカジテラス)", desc: "超人氣有「世界第一鬆軟的鬆餅」之稱的美味", rec: "", loc: "幸せのパンケーキ" },
 				{ name: "父親的鮪魚（親父のまぐろ）", desc: "連渡邊直美都推薦！", rec: "", loc: "親父のまぐろ" },
 				{ name: "ユクルyukuRu", desc: "沖繩手工義式冰淇淋", rec: "", loc: "ユクル"}
@@ -1203,7 +1202,7 @@ content.innerHTML = `
             if (evt.transport) {
                 html += `<div class="transport-spacer"><div class="transport-line"></div><div class="transport-tag">${evt.icon} ${evt.transport}</div></div>`;
             } else if (evt.type === 'flight') {
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${evt.endTime ? ` - ${evt.endTime}` : ''}</span><span class="time-dur">${evt.dur}</span></div>
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${evt.endTime ? ` ~ ${evt.endTime}` : ''}</span><span class="time-dur">${evt.dur}</span></div>
                         <div class="ticket-card"><div class="ticket-header"><div style="display: flex; align-items: center; gap: 8px;">
                         <img src="https://1000logos.net/wp-content/uploads/2020/04/AirAsia-Logo-2012.png" alt="AirAsia" style="height: 20px;"><span>Thai AirAsia</span></div><span>${evt.title}</span></div>
                         <div class="ticket-body"><div class="ticket-point"><div class="ticket-time">${evt.time}</div><div class="ticket-city">${evt.desc.split(' -> ')[0]}</div></div>
@@ -1225,7 +1224,7 @@ content.innerHTML = `
 
                 const endTime = evt.endTime || computeEndTime(evt.time, evt.dur);
 
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${endTime ? ` - ${endTime}` : ''}</span>
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${endTime ? ` ~ ${endTime}` : ''}</span>
                         <span class="time-dur">${evt.dur}</span></div>
                         <div class="event-card ${clickClass}" ${clickAttr}>
                             <div class="event-main-content">
@@ -1298,7 +1297,7 @@ content.innerHTML = `
     
     async function fetchForecast() {
         try {
-            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=7');
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_mean&timezone=Asia%2FTokyo&forecast_days=14&models=jma_seamless');
             const data = await res.json();
             forecastData = data.daily;
             updateWeatherCard(1);
