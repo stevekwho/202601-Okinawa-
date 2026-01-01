@@ -1202,7 +1202,7 @@ content.innerHTML = `
             if (evt.transport) {
                 html += `<div class="transport-spacer"><div class="transport-line"></div><div class="transport-tag">${evt.icon} ${evt.transport}</div></div>`;
             } else if (evt.type === 'flight') {
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${evt.endTime ? ` ~ ${evt.endTime}` : ''}</span><span class="time-dur">${evt.dur}</span></div>
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${evt.endTime ? ` - ${evt.endTime}` : ''}</span><span class="time-dur">${evt.dur}</span></div>
                         <div class="ticket-card"><div class="ticket-header"><div style="display: flex; align-items: center; gap: 8px;">
                         <img src="https://1000logos.net/wp-content/uploads/2020/04/AirAsia-Logo-2012.png" alt="AirAsia" style="height: 20px;"><span>Thai AirAsia</span></div><span>${evt.title}</span></div>
                         <div class="ticket-body"><div class="ticket-point"><div class="ticket-time">${evt.time}</div><div class="ticket-city">${evt.desc.split(' -> ')[0]}</div></div>
@@ -1224,7 +1224,7 @@ content.innerHTML = `
 
                 const endTime = evt.endTime || computeEndTime(evt.time, evt.dur);
 
-                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${endTime ? ` ~ ${endTime}` : ''}</span>
+                html += `<div class="event-group"><div class="time-col"><span class="time-start">${evt.time}${endTime ? ` - ${endTime}` : ''}</span>
                         <span class="time-dur">${evt.dur}</span></div>
                         <div class="event-card ${clickClass}" ${clickAttr}>
                             <div class="event-main-content">
