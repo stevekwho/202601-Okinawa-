@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 沖繩之旅 V11.2</title>
+    <title>2026 沖繩之旅 V13.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-	<link rel="manifest" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/main/manifest.json">
+    <link rel="manifest" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/main/manifest.json">
 	<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<link rel="apple-touch-icon" sizes="192x192" href="https://raw.githubusercontent.com/stevekwho/202601-Okinawa-/refs/heads/main/icon/app%20icon.png">
 	<style>
@@ -206,11 +206,10 @@
             cursor: pointer;
         }
         
-        /* Updated Shop Item for Better UX - Reduced Gaps */
         .todo-item { 
             background: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; 
             display: flex; align-items: center; 
-            gap: 6px; /* V11: Reduced from 12px to 6px */
+            gap: 6px; 
             border: 1px solid var(--border); 
             transition: all 0.2s; touch-action: pan-y;
             cursor: pointer;
@@ -223,7 +222,7 @@
         /* Drag Handle */
         .drag-handle { 
             color: #ddd; font-size: 16px; cursor: grab; 
-            padding-right: 2px; /* V11: Reduced padding */
+            padding-right: 2px; 
             display: flex; align-items: center; 
         }
         
@@ -276,8 +275,8 @@
 
     .search-btn {
         color: #aaa;
-        font-size: 14px; /* V11: Smaller icon */
-        padding: 2px 4px; /* V11: Smaller padding */
+        font-size: 14px; 
+        padding: 2px 4px; 
         cursor: pointer;
         flex-shrink: 0;
         line-height: 1;
@@ -314,7 +313,6 @@
         max-height: 85vh;
         object-fit: contain;
     }
-        /* V11: Reduced check margin */
         input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); margin-right: 4px; flex-shrink: 0; cursor: pointer; }
         .todo-text { font-size: 14px; flex: 1; }
         
@@ -387,7 +385,7 @@
         .currency-input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 18px; text-align: right; font-weight: bold; }
         .currency-select { padding: 12px 5px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; font-weight: bold; font-size: 14px; }
         .currency-result { text-align: right; font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 10px; }
-        .currency-rate-info { font-size: 11px; color: #999; text-align: right; margin-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+        .currency-rate-info { font-size: 11px; color: #999; text-align: right; margin-top: 5px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
         
         .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .tool-btn {
@@ -471,31 +469,41 @@
 <!-- TOOLS PAGE -->
 <div id="page-tools" class="container hidden" style="padding-top: 20px; padding-bottom: 100px;">
     
-    <!-- Currency Converter -->
+    <!-- Currency Converter V13 -->
     <div class="tool-card">
-        <div class="tool-header">💱 匯率計算機 (測試中)</div>
+        <div class="tool-header">💱 匯率計算機</div>
+        
+        <!-- Top Input -->
         <div class="currency-row">
-            <input type="number" id="curr-amount" class="currency-input" placeholder="1000" oninput="calcCurrency()">
-            <select id="curr-from" class="currency-select" onchange="calcCurrency()">
+            <input type="number" id="curr-amount-1" class="currency-input" placeholder="0" oninput="calcCurrency('1')">
+            <select id="curr-currency-1" class="currency-select" onchange="calcCurrency('1')">
                 <option value="JPY" selected>JPY</option>
                 <option value="HKD">HKD</option>
-                <option value="AUD">AUD</option>
+                <option value="TWD">TWD</option>
+                <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
+                <option value="AUD">AUD</option>
             </select>
         </div>
+        
         <div style="text-align: center; color: #ccc; margin: -10px 0 5px 0;">⇅</div>
+        
+        <!-- Bottom Input -->
         <div class="currency-row">
-            <input type="number" id="curr-result" class="currency-input" placeholder="--" oninput="calcCurrency(true)">
-            <select id="curr-to" class="currency-select" onchange="calcCurrency()">
+            <input type="number" id="curr-amount-2" class="currency-input" placeholder="0" oninput="calcCurrency('2')">
+            <select id="curr-currency-2" class="currency-select" onchange="calcCurrency('2')">
                 <option value="HKD" selected>HKD</option>
                 <option value="JPY">JPY</option>
-                <option value="AUD">AUD</option>
+                <option value="TWD">TWD</option>
+                <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
+                <option value="AUD">AUD</option>
             </select>
         </div>
+        
         <div class="currency-rate-info">
-            <span id="rate-text">匯率載入中...</span>
-            <button style="font-size:11px; padding:2px 6px; border:none; background:#eee; border-radius:4px; cursor:pointer;" onclick="refreshRates()">更新</button>
+            <span id="rate-display" style="font-weight:bold; color:var(--primary)">1 JPY ≈ -- HKD</span>
+            <span id="rate-text" style="font-size:10px; color:#aaa;">更新中...</span>
         </div>
     </div>
 
@@ -756,17 +764,33 @@
     let currentDay = 1;
     let isEditMode = false;
     let editIndex = -1;
-    let rates = { HKD: 1, JPY: 19.5, TWD: 4.1, USD: 0.13 }; 
+    let rates = { HKD: 1, JPY: 19.5, TWD: 4.1, USD: 0.13, GBP: 0.10, AUD: 0.19 }; 
 
     function init() {
         loadData();
         renderDayNav();
-        renderItinerary(1);
+        
+        // V13: Auto-open Itinerary Logic
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = today.getMonth() + 1; // 0-indexed
+        const d = today.getDate();
+        
+        let startDay = 1;
+        if (y === 2026 && m === 1 && d >= 1 && d <= 6) {
+            startDay = d;
+        }
+        
+        renderItinerary(startDay);
         renderList('shop'); 
         updateCountdown();
         fetchForecast(); 
+        
         initCurrency();
         initExpenses(); // V11
+        
+        // V13: Auto-refresh rates every 5 mins
+        setInterval(refreshRates, 300000);
     }
 
     function triggerHaptic() {
@@ -862,25 +886,17 @@
         document.body.removeChild(link);
     }
 
-    // --- Currency Logic ---
+    // --- V13 Currency Logic ---
     async function initCurrency() {
-        const cached = localStorage.getItem('exchange_rates');
+        const cached = localStorage.getItem('exchange_rates_v13');
         if(cached) {
             const data = JSON.parse(cached);
             rates = data.rates;
-            document.getElementById('rate-text').innerText = "匯率更新於: " + new Date(data.timestamp).toLocaleDateString();
+            const d = new Date(data.timestamp);
+            document.getElementById('rate-text').innerText = "匯率: " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
+            updateRateDisplay();
         }
-
-        try {
-            const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
-            const data = await res.json();
-            rates = data.rates;
-            localStorage.setItem('exchange_rates', JSON.stringify({ rates: rates, timestamp: Date.now() }));
-            document.getElementById('rate-text').innerText = "匯率已更新於: " + new Date().toLocaleDateString();
-            calcCurrency();
-        } catch(e) {
-            if(!cached) document.getElementById('rate-text').innerText = "離線模式";
-        }
+        refreshRates();
     }
 
     async function refreshRates() {
@@ -888,39 +904,55 @@
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/HKD');
             const data = await res.json();
             rates = data.rates;
-            localStorage.setItem('exchange_rates', JSON.stringify({ rates: rates, timestamp: Date.now() }));
-            document.getElementById('rate-text').innerText = "匯率已更新於: " + new Date().toLocaleDateString();
-            calcCurrency();
+            localStorage.setItem('exchange_rates_v13', JSON.stringify({ rates: rates, timestamp: Date.now() }));
+            
+            const d = new Date();
+            document.getElementById('rate-text').innerText = "匯率更新: " + d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
+            
+            // Re-calc to refresh numbers
+            // We check which input has value and update the other
+            const val1 = document.getElementById('curr-amount-1').value;
+            if(val1) calcCurrency('1');
+            else updateRateDisplay(); // Just update text
+            
         } catch(e) {
-            alert("無法更新匯率");
+            console.log("Offline mode");
         }
     }
 
-    function calcCurrency(reverse = false) {
-        let amount, fromCurr, toCurr, resultElem, inputElem;
-        if (reverse) {
-            amount = parseFloat(document.getElementById('curr-result').value);
-            fromCurr = document.getElementById('curr-to').value;
-            toCurr = document.getElementById('curr-from').value;
-            resultElem = document.getElementById('curr-amount');
-            inputElem = document.getElementById('curr-result');
+    function calcCurrency(source) {
+        const amt1El = document.getElementById('curr-amount-1');
+        const curr1 = document.getElementById('curr-currency-1').value;
+        
+        const amt2El = document.getElementById('curr-amount-2');
+        const curr2 = document.getElementById('curr-currency-2').value;
+
+        // V13 Logic: Convert via Base (HKD)
+        // Rate X->Y = (Rate HKD->Y) / (Rate HKD->X)
+        const rate1 = rates[curr1]; 
+        const rate2 = rates[curr2]; 
+        
+        if (source === '1') {
+            const val = parseFloat(amt1El.value);
+            if (isNaN(val)) { amt2El.value = ""; return; }
+            const res = val * (rate2 / rate1);
+            amt2El.value = res.toFixed(2);
         } else {
-            amount = parseFloat(document.getElementById('curr-amount').value);
-            fromCurr = document.getElementById('curr-from').value;
-            toCurr = document.getElementById('curr-to').value;
-            resultElem = document.getElementById('curr-result');
-            inputElem = document.getElementById('curr-amount');
+            const val = parseFloat(amt2El.value);
+            if (isNaN(val)) { amt1El.value = ""; return; }
+            const res = val * (rate1 / rate2);
+            amt1El.value = res.toFixed(2);
         }
-        
-        if (isNaN(amount)) {
-            resultElem.value = "";
-            return;
-        }
-        
-        const inHKD = amount / rates[fromCurr];
-        const result = inHKD * rates[toCurr];
-        
-        resultElem.value = result.toLocaleString(undefined, {maximumFractionDigits: 1});
+        updateRateDisplay();
+    }
+    
+    function updateRateDisplay() {
+        const c1 = document.getElementById('curr-currency-1').value;
+        const c2 = document.getElementById('curr-currency-2').value;
+        const r1 = rates[c1];
+        const r2 = rates[c2];
+        const displayRate = r2 / r1;
+        document.getElementById('rate-display').innerText = `1 ${c1} ≈ ${displayRate.toFixed(4)} ${c2}`;
     }
 
     function renderList(tab) {
